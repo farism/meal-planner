@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+   	match /ingredients/{document=**} {
+    	allow read, update, delete: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth != null
+    }
+    match /recipes/{document=**} {
+    	allow read, update, delete: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth != null
+    }
+    match /shopping_lists/{document=**} {
+    	allow read, update, delete: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth != null
+    }
+    match /meal_plans/{document=**} {
+    	allow read, update, delete: if request.auth.uid == resource.data.uid;
+      allow create: if request.auth != null
+    }
+  }
+}
