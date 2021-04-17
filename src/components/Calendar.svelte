@@ -1,13 +1,11 @@
 <script lang="ts">
   import dayjs from 'dayjs'
 
-  export let location = ''
-
   const fiveWeeks = Array.from(Array(5 * 7).keys())
 
   const sixWeeks = Array.from(Array(6 * 7).keys())
 
-  let date = dayjs()
+  export let date = dayjs()
 
   $: startOfMonth = date.startOf('month')
 
@@ -33,13 +31,6 @@
     date = date.add(1, 'month')
   }
 </script>
-
-<h1>Meal Plans</h1>
-
-<button on:click={prev}>prev</button>
-<button on:click={next}>next</button>
-
-{date.toString()}
 
 <div class="calendar">
   <div class="head">
@@ -89,6 +80,11 @@
     align-items: center;
     display: flex;
     justify-content: center;
+    transition: 0.2s all;
+  }
+
+  .body .cell:hover {
+    background: #eee;
   }
 
   .body .cell.adjacent {

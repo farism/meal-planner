@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { auth, isCheckingLoggedIn, provider, user } from '../firebase'
+  import Spinner from '../components/utils/Spinner.svelte'
+  import { auth, signedIn, provider, user } from '../firebase'
 
   export let location = ''
 
   function login() {
-    auth.signInWithPopup(provider)
+    auth.signInWithRedirect(provider)
   }
 
   function logout() {
@@ -13,8 +14,8 @@
 </script>
 
 <div>
-  {#if $isCheckingLoggedIn}
-    ...
+  {#if $signedIn === null}
+    <Spinner />
   {:else if $user}
     Welcome, {$user.displayName}
     <button on:click={logout}>sign out</button>

@@ -1,3 +1,5 @@
+declare module 'svelte-feather-icons' {}
+
 declare module 'svelte-routing' {
   import { SvelteComponent, SvelteComponentTyped } from 'svelte'
 
