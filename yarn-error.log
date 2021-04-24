@@ -1,0 +1,53 @@
+Arguments: 
+  /Users/farismustafa/.nvm/versions/node/v14.15.4/bin/node /Users/farismustafa/.nvm/versions/node/v14.15.4/bin/yarn add svelte-navigator
+
+PATH: 
+  /Users/farismustafa/.rvm/gems/ruby-2.6.3/bin:/Users/farismustafa/.rvm/gems/ruby-2.6.3@global/bin:/Users/farismustafa/.rvm/rubies/ruby-2.6.3/bin:/Users/farismustafa/.gem/ruby/2.6.0/bin:/Users/farismustafa/.kiex/elixirs/elixir-1.11.4/bin:/Users/farismustafa/.kiex/bin:/Users/farismustafa/.opam/default/bin:/Users/farismustafa/.dvm/bin:/Users/farismustafa/.nvm/versions/node/v14.15.4/bin:/Users/farismustafa/go/bin:/Users/farismustafa/.nimble/bin:/Users/farismustafa/.rvm/bin:/Users/farismustafa/.local/share/ponyup/bin:/Users/farismustafa/SDK/v_macos:/Users/farismustafa/SDK/flutter/bin:/Users/farismustafa/.yarn/bin:~/Library/Android/sdk/platform-tools:/usr/local/Cellar/postgresql@10/10.16_1/bin:/usr/local/opt/llvm/bin:/Applications/love 2.app/Contents/MacOS:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/farismustafa/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/farismustafa/.rvm/gems/ruby-2.6.3/bin:/Users/farismustafa/.rvm/gems/ruby-2.6.3@global/bin:/Users/farismustafa/.rvm/rubies/ruby-2.6.3/bin:/Users/farismustafa/.gem/ruby/2.6.0/bin:/Users/farismustafa/.kiex/elixirs/elixir-1.11.4/bin:/Users/farismustafa/.kiex/bin:/Users/farismustafa/.dvm/bin:/Users/farismustafa/.nvm/versions/node/v14.15.4/bin:/Users/farismustafa/go/bin:/Users/farismustafa/.nimble/bin:/Users/farismustafa/.rvm/bin:/Users/farismustafa/.local/share/ponyup/bin:/Users/farismustafa/SDK/v_macos:/Users/farismustafa/SDK/flutter/bin:/Users/farismustafa/.yarn/bin:~/Library/Android/sdk/platform-tools:/usr/local/Cellar/postgresql@10/10.16_1/bin:/usr/local/opt/llvm/bin:/Applications/love 2.app/Contents/MacOS:/Applications/Visual Studio Code.app/Contents/Resources/app/bin:/Users/farismustafa/.cargo/bin:/usr/local/opt/fzf/bin
+
+Yarn version: 
+  1.19.0
+
+Node version: 
+  14.15.4
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: EINVAL: invalid argument, mkdir '/Users/farismustafa/Documents/Projects/meal-planner/node_modules/rxjs/node_modules/tslib'
+
+npm manifest: 
+  {
+    "name": "meal-planner",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "serve": "vite preview"
+    },
+    "devDependencies": {
+      "@sveltejs/vite-plugin-svelte": "1.0.0-next.7",
+      "@types/lodash": "^4.14.168",
+      "svelte": "^3.35.0",
+      "svelte-preprocess": "^4.6.9",
+      "typescript": "^4.2.3",
+      "vite": "^2.1.5"
+    },
+    "dependencies": {
+      "@types/lodash-es": "^4.17.4",
+      "dayjs": "^1.10.4",
+      "firebase": "^8.4.1",
+      "lodash-es": "^4.17.21",
+      "rxfire": "^4.0.0",
+      "rxjs": "^6.6.7",
+      "svelte-feather-icons": "^3.3.0",
+      "svelte-routing": "^1.5.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

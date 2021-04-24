@@ -1,27 +1,40 @@
 <script lang="ts">
   import { orderBy } from 'lodash-es'
-  import SlidersIcon from 'svelte-feather-icons/src/icons/SlidersIcon.svelte'
   import { derived } from 'svelte/store'
-  import AddRemoveFab from '../components/buttons/AddRemoveFAB.svelte'
   import Button from '../components/buttons/Button.svelte'
-  import FAB from '../components/buttons/FAB.svelte'
+  import FABCreate from '../components/buttons/FABCreate.svelte'
+  import FABRemove from '../components/buttons/FABRemove.svelte'
+  import FABSettings from '../components/buttons/FABSettings.svelte'
   import Errors from '../components/forms/Errors.svelte'
   import Input from '../components/forms/Input.svelte'
+  import Search from '../components/forms/Search.svelte'
   import Select from '../components/forms/Select.svelte'
   import BottomSheet from '../components/layouts/BottomSheet.svelte'
+  import FABPanel from '../components/layouts/FABPanel.svelte'
   import Header from '../components/layouts/Header.svelte'
   import List from '../components/layouts/List.svelte'
   import ListConfig from '../components/utils/ListConfig.svelte'
-  import { add, getDocs, remove, update } from '../firebase'
+  import {
+    canEdit,
+    getDocs,
+    loading,
+    removePantryItem,
+    savePantryItem,
+  } from '../firebase'
   import type { PantryItem } from '../types'
 
   export let location = ''
 
-  const defaultPantryItem: PantryItem = { name: '', category: '' }
+  const defaultPantryItem: PantryItem = {
+    id: null,
+    uid: null,
+    name: '',
+    category: '',
+  }
 
   let nameRef: HTMLInputElement
 
-  let activeItem: PantryItem | null = null
+  let activeItem: PantryItem = defaultPantryItem
 
   let showListConfig = false
 
@@ -37,15 +50,28 @@
 
   let sortDirection: 'asc' | 'desc' = 'asc'
 
+  let search = ''
+
+  $: searchCheck = search.trim().toLowerCase()
+
+  $: noItems =
+    $loading['pantry'] === false ? 'There are no items in your pantry' : ''
+
+  $: emptyMessage = searchCheck ? 'Could not find any search results' : noItems
+
   $: editHeaderLabel = activeItem?.id ? 'Edit' : 'Create'
 
   $: editButtonLabel = activeItem?.id ? 'Update' : 'Create'
 
   $: docs = getDocs<PantryItem>('pantry')
 
-  $: orderedDocs = derived(docs, ($docs) =>
-    orderBy($docs, [sortByField], [sortDirection])
-  )
+  $: orderedDocs = derived(docs, ($docs) => {
+    const ordered = orderBy($docs, [sortByField], [sortDirection])
+
+    return searchCheck === ''
+      ? ordered
+      : ordered.filter((item) => item.name.toLowerCase().includes(searchCheck))
+  })
 
   $: if (showBottomSheet) {
     document.body.classList.add('bottomsheet-open')
@@ -62,7 +88,8 @@
   }
 
   function resetBottomSheet() {
-    activeItem = null
+    showBottomSheet = false
+    activeItem = { ...defaultPantryItem }
     errors = []
   }
 
@@ -75,48 +102,37 @@
     isRemoving = !isRemoving
   }
 
-  function editPantryItem(item: PantryItem) {
+  function setActive(item: PantryItem) {
     activeItem = item
     showBottomSheet = true
   }
 
-  function addPantryItem() {
-    if (activeItem) {
-      if (activeItem.name.trim() === '') {
-        errors = ['* name required']
-      } else if (activeItem.id) {
-        update<PantryItem>('pantry', activeItem)
-          ?.then(() => console.log)
-          .catch(() => console.error)
-          .finally(() => (showBottomSheet = false))
-      } else {
-        add<PantryItem>('pantry', activeItem)
-          ?.then(() => console.log)
-          .catch(() => console.error)
-          .finally(() => (showBottomSheet = false))
-      }
+  function saveItem() {
+    if (activeItem.name.trim() === '') {
+      errors = ['* name required']
+    } else {
+      savePantryItem(activeItem)
+      resetBottomSheet()
     }
   }
 
-  function removePantryItem(item: PantryItem) {
-    if (item.id) {
-      remove('pantry', item.id)
-    }
+  function removeItem(item: PantryItem) {
+    removePantryItem(item)
   }
 </script>
 
-<div class="list" class:isRemoving>
-  <div class="content">
-    <Header>
-      <div>Pantry</div>
-    </Header>
-    <List
-      docs={orderedDocs}
-      removing={isRemoving}
-      onRemove={removePantryItem}
-      onClick={editPantryItem}
-    />
-  </div>
+<div class="content">
+  <Header>
+    <div>Pantry</div>
+  </Header>
+  <Search bind:value={search} />
+  <List
+    {emptyMessage}
+    docs={orderedDocs}
+    removing={isRemoving}
+    onRemove={removeItem}
+    onClick={setActive}
+  />
 </div>
 
 <ListConfig
@@ -125,11 +141,13 @@
   bind:direction={sortDirection}
 />
 
-<FAB color="secondary" offset={{ x: 0, y: -130 }} on:click={toggleListConfig}>
-  <SlidersIcon size="24" />
-</FAB>
-
-<AddRemoveFab {onClickAdd} {onClickRemove} {isRemoving} />
+<FABPanel>
+  <FABSettings on:click={toggleListConfig} />
+  {#if $canEdit}
+    <FABRemove on:click={onClickRemove} {isRemoving} />
+    <FABCreate on:click={onClickAdd} />
+  {/if}
+</FABPanel>
 
 <BottomSheet
   heading={`${editHeaderLabel} Pantry Item`}
@@ -151,8 +169,8 @@
         <option>category</option>
         <option value="deli">Deli</option>
       </Select>
-      <div class="add-button">
-        <Button on:click={addPantryItem}>{editButtonLabel} Item</Button>
+      <div class="save-button">
+        <Button on:click={saveItem}>{editButtonLabel} Item</Button>
       </div>
     {/if}
   </div>
@@ -161,22 +179,18 @@
 <style>
   :global(body.bottomsheet-open) .content {
     filter: blur(2px);
-    transform: translateY(-36px) scale(0.9);
+    transform: translateY(-50px);
   }
 
   .bottom-sheet :global(input) {
     margin-bottom: 24px;
   }
 
-  .list {
-    overflow-x: hidden;
-  }
-
   .content {
     transition: 0.2s transform ease-out;
   }
 
-  .add-button {
+  .save-button {
     display: flex;
     justify-content: flex-end;
     margin-top: 24px;

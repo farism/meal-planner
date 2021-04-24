@@ -1,21 +1,66 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-   	match /ingredients/{document=**} {
-    	allow read, update, delete: if request.auth.uid == resource.data.uid;
-      allow create: if request.auth != null
+    function isOwner() {
+      return request.auth.uid == resource.data.uid 
     }
+
+    function isAuthor() {
+      return request.auth.uid == request.resource.data.uid 
+    }
+
+    function getPermission() {
+      return get(/databases/$(database)/documents/permissions/$(resource.data.uid))
+    }
+
+    function isReader() {
+      return request.auth.token.email in getPermission().data.read
+    }
+
+    function isWriter() {
+      return request.auth.token.email in getPermission().data.write
+    }
+
+    function canRead() {
+      return isOwner() || isReader()
+    }
+
+    function canWrite() {
+      return isOwner() || isWriter()
+    }
+
+    function isSharedWithUser() {
+      let email = request.auth.token.email;
+      let read = resource.data.read;
+      let write = resource.data.write;
+
+      return email in read || email in write
+    }
+
+   	match /permissions/{document=**} {
+      allow read: if isOwner() || isSharedWithUser()
+      allow create, update, delete: if request.auth.uid == resource.id
+    }
+
+   	match /pantry/{document=**} {
+    	allow read: if canRead();
+    	allow update, delete: if canWrite();
+      allow create: if isAuthor()
+    }
+
     match /recipes/{document=**} {
-    	allow read, update, delete: if request.auth.uid == resource.data.uid;
-      allow create: if request.auth != null
+    	allow read, update, delete: if isOwner();
+      allow create: if isAuthor()
     }
+
     match /shopping_lists/{document=**} {
-    	allow read, update, delete: if request.auth.uid == resource.data.uid;
-      allow create: if request.auth != null
+    	allow read, update, delete: if isOwner();
+      allow create: if isAuthor()
     }
+    
     match /meal_plans/{document=**} {
-    	allow read, update, delete: if request.auth.uid == resource.data.uid;
-      allow create: if request.auth != null
+    	allow read, update, delete: if isOwner();
+      allow create: if isAuthor()
     }
   }
 }

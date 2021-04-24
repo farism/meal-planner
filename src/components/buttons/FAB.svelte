@@ -17,15 +17,13 @@
     align-items: center;
     border-radius: 100%;
     border: none;
-    bottom: 66px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     color: white;
     display: flex;
     height: 48px;
     justify-content: center;
     outline: none;
-    position: fixed;
-    right: 16px;
+    position: relative;
     user-select: none;
     width: 48px;
   }

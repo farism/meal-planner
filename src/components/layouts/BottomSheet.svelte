@@ -1,9 +1,14 @@
 <script lang="ts">
   import X from 'svelte-feather-icons/src/icons/XIcon.svelte'
   import ScrollShadow from '../utils/ScrollShadow.svelte'
+  import ModalHeader from './ModalHeader.svelte'
 
   export let open = false
+
   export let heading = 'Heading'
+
+  export let scrimWillClose = true
+
   export let onClickDismiss = () => {}
 
   $: if (open) {
@@ -14,14 +19,15 @@
 </script>
 
 <div class="bottom-sheet" class:open>
-  <div class="scrim" on:scroll={(e) => e.stopPropagation()} />
+  <div
+    class="scrim"
+    on:click={scrimWillClose ? onClickDismiss : () => {}}
+    on:scroll={(e) => e.stopPropagation()}
+  />
   <div class="content">
-    <div class="header">
-      <h2>{heading}</h2>
-      <button class="dismiss" on:click={onClickDismiss}>
-        <X size="24" />
-      </button>
-    </div>
+    <ModalHeader {onClickDismiss}>
+      <slot name="heading" />{heading}
+    </ModalHeader>
     <ScrollShadow>
       <div class="body">
         <slot />
@@ -67,7 +73,7 @@
   }
 
   .content {
-    background: white;
+    background: rgb(245, 245, 245);
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
     box-sizing: border-box;
@@ -86,6 +92,7 @@
   }
 
   .header {
+    align-items: center;
     display: flex;
     flex: 0 0 auto;
     padding: 30px;

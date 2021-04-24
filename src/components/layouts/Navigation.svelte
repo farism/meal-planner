@@ -33,7 +33,7 @@
 <style>
   nav {
     align-items: center;
-    background: rgb(250, 250, 250);
+    background: rgb(240, 240, 240);
     display: flex;
     height: 100%;
     justify-content: flex-end;

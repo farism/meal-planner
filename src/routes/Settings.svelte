@@ -1,56 +1,10 @@
 <script lang="ts">
+  import { Link } from 'svelte-navigator'
+  import Button from '../components/buttons/Button.svelte'
   import Header from '../components/layouts/Header.svelte'
-  import { add, getDocs, remove } from '../firebase'
-  import type { PantryItem } from '../types'
+  import { logout, user } from '../firebase'
 
   export let location = ''
-
-  const defaultPantryItem: PantryItem = { name: '', category: '' }
-
-  let activeItem: PantryItem | null = null
-
-  let showBottomSheet = false
-
-  let showItemRemove = false
-
-  $: docs = getDocs<PantryItem>('pantry')
-
-  $: if (showBottomSheet) {
-    document.body.classList.add('bottomsheet-open')
-  } else {
-    document.body.classList.remove('bottomsheet-open')
-
-    setTimeout(() => (activeItem = null), 300)
-  }
-
-  function onClickRemoveFAB() {
-    showItemRemove = !showItemRemove
-  }
-
-  function onClickCreateFAB() {
-    activeItem = { ...defaultPantryItem }
-    showBottomSheet = true
-  }
-
-  function editPantryItem(item: PantryItem) {
-    activeItem = item
-    showBottomSheet = true
-  }
-
-  function addPantryItem() {
-    if (activeItem) {
-      add<PantryItem>('pantry', activeItem)
-        ?.then(() => console.log)
-        .catch(() => console.error)
-        .finally(() => (showBottomSheet = false))
-    }
-  }
-
-  function removePantryItem(item: PantryItem) {
-    if (item.id) {
-      remove('pantry', item.id)
-    }
-  }
 </script>
 
 <div class="wrapper">
@@ -58,7 +12,26 @@
     <Header>
       <div>Settings</div>
     </Header>
-    <p>Settings</p>
+    <div class="body">
+      {#if $user}
+        <div class="user">
+          {#if $user?.photoURL}
+            <div class="avatar">
+              <img src={$user.photoURL} alt="User Photo" />
+            </div>
+          {/if}
+          <div class="name">
+            {$user.displayName}
+          </div>
+          <div class="buttons">
+            <Link to="/settings/share">
+              <Button secondary>Account Sharing</Button>
+            </Link>
+            <Button warning on:click={logout}>Sign out</Button>
+          </div>
+        </div>
+      {/if}
+    </div>
   </div>
 </div>
 
@@ -69,5 +42,40 @@
 
   .content {
     transition: 0.2s all ease-out;
+  }
+
+  .body {
+    padding: 30px 60px;
+  }
+
+  h4 {
+    text-align: center;
+  }
+
+  .user {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .avatar {
+    border-radius: 100%;
+    overflow: hidden;
+    width: 96px;
+    height: 96px;
+  }
+
+  .name {
+    padding: 24px 0;
+  }
+
+  .buttons {
+    width: 100%;
+  }
+
+  .buttons > :global(*) {
+    display: flex;
+    margin-bottom: 24px;
   }
 </style>

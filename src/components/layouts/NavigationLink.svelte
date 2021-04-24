@@ -1,16 +1,10 @@
 <script lang="ts">
-  import type { GetPropsParams } from 'svelte-routing'
-  import { Link } from 'svelte-routing'
+  import { Link } from 'svelte-navigator'
 
   export let to: string = ''
   export let label: string = ''
 
-  function getProps({
-    location,
-    href,
-    isPartiallyCurrent,
-    isCurrent,
-  }: GetPropsParams) {
+  function getProps({ location, href, isPartiallyCurrent, isCurrent }: any) {
     const isActive = href === '/' ? isCurrent : isPartiallyCurrent || isCurrent
 
     const className = `navigation-link ${isActive ? 'active' : ''}`

@@ -1,6 +1,7 @@
 <script lang="ts">
   import ScrollShadow from '../utils/ScrollShadow.svelte'
   import Navigation from './Navigation.svelte'
+  import SharingOverlay from './SharingOverlay.svelte'
 </script>
 
 <div class="body">
@@ -12,6 +13,8 @@
 <div class="navigation">
   <Navigation />
 </div>
+
+<SharingOverlay />
 
 <style>
   :global(body.bottomsheet-open) .body {

@@ -1,11 +1,9 @@
 <script lang="ts">
   import dayjs from 'dayjs'
 
-  const fiveWeeks = Array.from(Array(5 * 7).keys())
-
-  const sixWeeks = Array.from(Array(6 * 7).keys())
-
   export let date = dayjs()
+
+  export let onClickDate = (d: dayjs.Dayjs) => {}
 
   $: startOfMonth = date.startOf('month')
 
@@ -15,20 +13,22 @@
 
   $: calendarDaysCount = startOfMonth.day() + startOfMonth.daysInMonth()
 
-  $: weeks = calendarDaysCount > 35 ? sixWeeks : fiveWeeks
+  $: weeks = Array.from(Array(Math.ceil(calendarDaysCount / 7) * 7).keys())
 
   $: calendarDates = weeks.map((i) => calendarStartDate.add(i, 'days'))
 
-  function isAdjacent(date: dayjs.Dayjs) {
-    return date.isBefore(startOfMonth) || date.isAfter(endOfMonth)
+  function isToday(d: dayjs.Dayjs) {
+    return d.isSame(dayjs(), 'date')
   }
 
-  function prev() {
-    date = date.subtract(1, 'month')
+  function isAdjacent(d: dayjs.Dayjs) {
+    return d.isBefore(startOfMonth) || d.isAfter(endOfMonth)
   }
 
-  function next() {
-    date = date.add(1, 'month')
+  function isUpcoming(d: dayjs.Dayjs) {
+    return (
+      d.isAfter(dayjs().subtract(1, 'day')) && d.isBefore(dayjs().add(6, 'day'))
+    )
   }
 </script>
 
@@ -43,9 +43,15 @@
     <div class="cell">Sa</div>
   </div>
   <div class="body">
-    {#each calendarDates as date}
-      <div class="cell" class:adjacent={isAdjacent(date)}>
-        {date.date()}
+    {#each calendarDates as d}
+      <div
+        class="cell"
+        class:today={isToday(d)}
+        class:adjacent={isAdjacent(d)}
+        class:upcoming={isUpcoming(d)}
+        on:click={() => onClickDate(d)}
+      >
+        {d.date()}
       </div>
     {/each}
   </div>
@@ -53,13 +59,15 @@
 
 <style>
   .calendar {
+    -webkit-touch-callout: none; /* iOS Safari */
+    user-select: none;
     width: 100%;
   }
 
   .head {
     border-bottom: 1px solid black;
     display: grid;
-    gap: 1em;
+    gap: 4px;
     grid-template-columns: repeat(7, 1fr);
     height: 48px;
   }
@@ -72,7 +80,7 @@
 
   .body {
     display: grid;
-    gap: 1em;
+    gap: 4px;
     grid-template-columns: repeat(7, 1fr);
   }
 
@@ -83,12 +91,17 @@
     transition: 0.2s all;
   }
 
-  .body .cell:hover {
-    background: #eee;
-  }
-
   .body .cell.adjacent {
     color: #aaa;
+  }
+
+  .body .cell.upcoming {
+    background-color: var(--primary-color-light2);
+  }
+
+  .body .cell.today {
+    background-color: var(--secondary-color-light);
+    font-weight: 700;
   }
 
   .body .cell::before {

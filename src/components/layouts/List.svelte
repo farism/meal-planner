@@ -4,37 +4,49 @@
   import { fade } from 'svelte/transition'
   import RemoveButton from '../buttons/RemoveButton.svelte'
 
-  interface Item {
-    name: string
-    id: string
-  }
-
-  export let docs: Readable<Item[]> = writable([])
+  export let docs: Readable<any[]> = writable([])
 
   export let removing = false
+
+  export let emptyMessage = 'No items to display'
+
+  export let keyField = 'id'
+
+  export let getName = (item: any) => item.name
 
   export let onRemove = (item: any) => {}
 
   export let onClick = (item: any) => {}
 </script>
 
-{#if $docs}
-  <ul class="list" class:removing>
-    {#each $docs as item (item.id)}
-      <li class="item" out:fade|local>
-        <RemoveButton class="item-remove" on:click={() => onRemove(item)} />
-        <div class="item-name" on:click={() => onClick(item)}>
-          {item.name}
-        </div>
-      </li>
-    {/each}
-  </ul>
-{/if}
+<div class="wrapper">
+  {#if $docs}
+    {#if $docs.length > 0}
+      <ul class="list" class:removing>
+        {#each $docs as item (item[keyField])}
+          <li class="item" out:fade|local>
+            <RemoveButton class="item-remove" on:click={() => onRemove(item)} />
+            <div class="item-name" on:click={() => onClick(item)}>
+              <div>
+                {getName(item)}
+              </div>
+            </div>
+          </li>
+        {/each}
+      </ul>
+    {:else if emptyMessage}
+      <p>{emptyMessage}</p>
+    {/if}
+  {/if}
+</div>
 
 <style>
+  .wrapper {
+    overflow-x: hidden;
+  }
+
   .list {
     margin: 0;
-    overflow-x: hidden;
     padding: 0;
   }
 
@@ -52,11 +64,10 @@
     align-items: center;
     display: flex;
     height: 48px;
-    margin: 0 -100px;
-    padding: 0 130px;
+    padding: 0 30px;
     position: relative;
     transition: 0.2s transform ease-out;
-    border-bottom: 1px solid rgb(230, 230, 230);
+    border-bottom: 1px solid rgb(215, 215, 215);
   }
 
   .item:active {
@@ -64,7 +75,7 @@
   }
 
   .item + .item {
-    border-top: 1px solid rgb(245, 245, 245);
+    border-top: 1px solid rgb(235, 235, 235);
   }
 
   .item-name {
@@ -73,8 +84,12 @@
     flex: 1 1 auto;
     height: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
     transition: 0.2s transform ease-out;
+  }
+
+  .item-name div {
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -85,5 +100,12 @@
     pointer-events: none;
     transform: scale(0.5) rotate(-180deg);
     transition: 0.2s all ease-out;
+  }
+
+  p {
+    font-style: italic;
+    margin: 0;
+    padding: 30px;
+    text-align: center;
   }
 </style>
