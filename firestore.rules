@@ -58,7 +58,7 @@ service cloud.firestore {
       allow create: if isAuthor()
     }
     
-    match /meal_plans/{document=**} {
+    match /dishes/{document=**} {
     	allow read, update, delete: if isOwner();
       allow create: if isAuthor()
     }

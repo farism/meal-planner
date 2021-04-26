@@ -15,7 +15,7 @@
     getSharedPermissions,
     removePermission,
     savePermission,
-    setActivePermission,
+    settings,
     user,
   } from '../firebase'
   import type { SharedPermission } from '../types'
@@ -35,11 +35,11 @@
 
   let showBottomSheet = false
 
-  let activePermission: SharedPermission = defaultPermission
+  let currentPermission: SharedPermission = defaultPermission
 
   let errors: string[] = []
 
-  $: activeIsOwned = activePermission.uid === $user?.uid
+  $: activeIsOwned = currentPermission.uid === $user?.uid
 
   $: bottomSheetHeader = activeIsOwned
     ? 'Share my account'
@@ -61,7 +61,7 @@
 
   function resetBottomSheet() {
     errors = []
-    activePermission = { ...defaultPermission }
+    currentPermission = { ...defaultPermission }
     showBottomSheet = false
   }
 
@@ -74,22 +74,24 @@
   }
 
   function setActive(permission: SharedPermission) {
-    activePermission = { ...permission }
+    currentPermission = { ...permission }
     showBottomSheet = true
   }
 
   function save() {
-    if (activePermission.email.trim() === '') {
+    if (currentPermission.email.trim() === '') {
       errors = ['* email is required']
     } else {
-      savePermission(activePermission)
+      savePermission(currentPermission)
+
       showBottomSheet = false
     }
   }
 
   function useAccount() {
-    setActivePermission(activePermission)
     showBottomSheet = false
+
+    settings.update((s) => ({ ...s, activePermission: currentPermission }))
   }
 </script>
 
@@ -132,16 +134,16 @@
       {#if errors.length > 0}
         <Errors {errors} />
       {/if}
-      {#if activePermission}
+      {#if currentPermission}
         <Input
           placeholder="email *"
           bind:ref={nameRef}
-          bind:value={activePermission.email}
+          bind:value={currentPermission.email}
         />
-        <Checkbox bind:checked={activePermission.read} disabled>
+        <Checkbox bind:checked={currentPermission.read} disabled>
           Permission to view my data
         </Checkbox>
-        <Checkbox bind:checked={activePermission.write}>
+        <Checkbox bind:checked={currentPermission.write}>
           Permission to edit my data
         </Checkbox>
         <div class="button">
@@ -150,16 +152,16 @@
       {/if}
     {:else}
       <div>
-        <b>{activePermission.email}</b> has shared their account
+        <b>{currentPermission.email}</b> has shared their account
       </div>
       <div class="permissions">
-        {#if activePermission.read}
+        {#if currentPermission.read}
           <div class="permission">
             <CheckCircleIcon size="16" /> You have permission to read their account
             data
           </div>
         {/if}
-        {#if activePermission.write}
+        {#if currentPermission.write}
           <div class="permission">
             <CheckCircleIcon size="16" /> You have permission to edit their account
             data

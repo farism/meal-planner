@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { draw } from 'svelte/transition'
+  import { draw, scale } from 'svelte/transition'
 
   export let checked: boolean = false
 
@@ -7,10 +7,11 @@
 </script>
 
 <label>
-  <input type="checkbox" bind:checked {disabled} />
+  <input type="checkbox" bind:checked on:change {disabled} />
   <span class="checkbox">
     {#if checked}
       <svg
+        out:scale|local
         class="checkmark"
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -19,7 +20,7 @@
       >
         <g fill="none">
           <path
-            in:draw={{ duration: 200 }}
+            in:draw|local={{ duration: 200 }}
             stroke-width="3"
             d="M2 8 l5 5 l8 -10"
           />
@@ -38,7 +39,6 @@
     align-items: center;
     display: flex;
     justify-content: flex-start;
-    margin-top: 24px;
     position: relative;
     user-select: none;
   }

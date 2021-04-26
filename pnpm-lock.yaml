@@ -6,7 +6,7 @@ dependencies:
   rxfire: 4.0.0_firebase@8.4.1+rxjs@6.6.7
   rxjs: 6.6.7
   svelte-feather-icons: 3.3.0
-  svelte-routing: 1.5.0_svelte@3.37.0
+  svelte-navigator: 3.1.5_svelte@3.37.0+typescript@4.2.3
 devDependencies:
   '@sveltejs/vite-plugin-svelte': 1.0.0-next.7_svelte@3.37.0+vite@2.1.5
   '@types/lodash': 4.14.168
@@ -516,6 +516,10 @@ packages:
         optional: true
     resolution:
       integrity: sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
+  /dedent-js/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-vuX7fJ5yfYXf+iRZDRDsGrElUwU=
   /detect-indent/6.0.0:
     dev: true
     engines:
@@ -734,6 +738,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
+  /lower-case/2.0.2:
+    dependencies:
+      tslib: 2.2.0
+    dev: false
+    resolution:
+      integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==
   /lru-cache/6.0.0:
     dependencies:
       yallist: 4.0.0
@@ -758,6 +768,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-/2ZUaJX2ANuLtTvqTlgqBQNJoQO398KyJgZloL0PZkC0dpysjncRUPsFe3DUPzz/y3h+u7C46np8RMuvF3jsSQ==
+  /no-case/3.0.4:
+    dependencies:
+      lower-case: 2.0.2
+      tslib: 2.2.0
+    dev: false
+    resolution:
+      integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==
   /node-fetch/2.6.1:
     dev: false
     engines:
@@ -770,6 +787,13 @@ packages:
       node: '>= 6.0.0'
     resolution:
       integrity: sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
+  /pascal-case/3.1.2:
+    dependencies:
+      no-case: 3.0.4
+      tslib: 2.2.0
+    dev: false
+    resolution:
+      integrity: sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==
   /path-parse/1.0.6:
     dev: true
     resolution:
@@ -908,6 +932,16 @@ packages:
       svelte: '>=3.19.0'
     resolution:
       integrity: sha512-Rc4w11U+U30m/cHqOJ/xioFSEAY5fd5muiQC7FL6XJuJAuB2OIJoEZl3KEJR2uO1/f4Bw0PdrugtbxcngSsOtQ==
+  /svelte-navigator/3.1.5_svelte@3.37.0+typescript@4.2.3:
+    dependencies:
+      svelte: 3.37.0
+      svelte2tsx: 0.1.188_svelte@3.37.0+typescript@4.2.3
+    dev: false
+    peerDependencies:
+      svelte: 3.x
+      typescript: '*'
+    resolution:
+      integrity: sha512-CGTaexasSLpUaTSN2AlYqii0JeisIgg7uZbm8XCLKlpM9Qv3IltlJ7Nvh90Xw9ND97KqtGOjNJ3LNwMN1ABV0w==
   /svelte-preprocess/4.7.0_svelte@3.37.0+typescript@4.2.3:
     dependencies:
       '@types/pug': 2.0.4
@@ -958,20 +992,24 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-iNrY4YGqi0LD2e6oT9YbdSzOKntxk8gmzfqso1z/lUJOZh4o6fyIqkirmiZ8/dDJFqtIE1spVgDFWgkfhLEYlw==
-  /svelte-routing/1.5.0_svelte@3.37.0:
-    dependencies:
-      svelte: 3.37.0
-    dev: false
-    peerDependencies:
-      svelte: ^3.20.x
-    resolution:
-      integrity: sha512-4ftcSO2x5kzCUWQKm9Td6/C+t7lRjMEo72utRO0liS/aWZuRwAXOBl3y+hWZw8tV+DTGElqaAAyi44AuWXcVBg==
   /svelte/3.37.0:
     dev: true
     engines:
       node: '>= 8'
     resolution:
       integrity: sha512-TRF30F4W4+d+Jr2KzUUL1j8Mrpns/WM/WacxYlo5MMb2E5Qy2Pk1Guj6GylxsW9OnKQl1tnF8q3hG/hQ3h6VUA==
+  /svelte2tsx/0.1.188_svelte@3.37.0+typescript@4.2.3:
+    dependencies:
+      dedent-js: 1.0.1
+      pascal-case: 3.1.2
+      svelte: 3.37.0
+      typescript: 4.2.3
+    dev: false
+    peerDependencies:
+      svelte: ^3.24
+      typescript: ^4.1.2
+    resolution:
+      integrity: sha512-+clvG/h9Z02fhx8sxDruKppheCcAXWhkKNjz9f3R4jdwVJgTHbr66qgewIjN1i2Id3D9tBKnKgaghm8H1W55sA==
   /tslib/1.14.1:
     dev: false
     resolution:
@@ -980,6 +1018,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
+  /tslib/2.2.0:
+    dev: false
+    resolution:
+      integrity: sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==
   /typescript/4.2.3:
     dev: true
     engines:
@@ -1042,7 +1084,7 @@ specifiers:
   rxjs: ^6.6.7
   svelte: ^3.35.0
   svelte-feather-icons: ^3.3.0
+  svelte-navigator: ^3.1.5
   svelte-preprocess: ^4.6.9
-  svelte-routing: ^1.5.0
   typescript: ^4.2.3
   vite: ^2.1.5

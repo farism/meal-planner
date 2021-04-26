@@ -24,8 +24,6 @@
   .tabs {
     border-bottom: 1px solid var(--secondary-color-light);
     display: flex;
-    position: sticky;
-    top: 0;
   }
 
   .tabs button {

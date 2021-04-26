@@ -35,6 +35,10 @@
     right: 24px;
   }
 
+  .config :global(label + label) {
+    margin: 12px 0;
+  }
+
   .scrim {
     background: transparent;
     height: 100%;

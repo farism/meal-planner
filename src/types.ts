@@ -1,8 +1,18 @@
+import type { Dayjs } from 'dayjs'
+
 export interface SharedPermission {
   uid: string
   email: string
   read: boolean
   write: boolean
+}
+
+export interface Settings {
+  activePermission: SharedPermission | null
+  mealView: 0 | 1
+  showBreakfast: boolean
+  showLunch: boolean
+  showDinner: boolean
 }
 
 export type Permission = {
@@ -41,18 +51,18 @@ export interface Recipe {
   steps: string[]
 }
 
+export type DishType = 'Recipe' | 'PantryItem'
+
 export type MealTime = 'Breakfast' | 'Lunch' | 'Dinner'
 
 export interface Dish {
   id: string | null
-  mealTime: MealTime
-  name: string
-}
-
-export interface Meal {
-  id: string | null
   uid: string | null
-  dishes: Dish[]
+  date: Dayjs | Date
+  item?: PantryItem
+  mealTime: MealTime
+  recipe?: Recipe
+  type: DishType
 }
 
 export interface ShoppingList {

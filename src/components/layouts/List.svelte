@@ -17,19 +17,25 @@
   export let onRemove = (item: any) => {}
 
   export let onClick = (item: any) => {}
+
+  const hasDefaultSlot = Boolean($$props?.$$slots?.default)
 </script>
 
-<div class="wrapper">
+<div>
   {#if $docs}
     {#if $docs.length > 0}
       <ul class="list" class:removing>
         {#each $docs as item (item[keyField])}
-          <li class="item" out:fade|local>
+          <li class="item" out:fade|local={{ duration: removing ? 300 : 0 }}>
             <RemoveButton class="item-remove" on:click={() => onRemove(item)} />
             <div class="item-name" on:click={() => onClick(item)}>
-              <div>
-                {getName(item)}
-              </div>
+              {#if hasDefaultSlot}
+                <slot {item} />
+              {:else}
+                <div>
+                  {getName(item)}
+                </div>
+              {/if}
             </div>
           </li>
         {/each}
@@ -41,10 +47,6 @@
 </div>
 
 <style>
-  .wrapper {
-    overflow-x: hidden;
-  }
-
   .list {
     margin: 0;
     padding: 0;
@@ -67,15 +69,14 @@
     padding: 0 30px;
     position: relative;
     transition: 0.2s transform ease-out;
-    border-bottom: 1px solid rgb(215, 215, 215);
+  }
+
+  .item + .item {
+    border-top: 1px solid var(--secondary-color-light);
   }
 
   .item:active {
     background: var(--item-highlight-color);
-  }
-
-  .item + .item {
-    border-top: 1px solid rgb(235, 235, 235);
   }
 
   .item-name {

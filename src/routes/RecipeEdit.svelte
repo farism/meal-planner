@@ -113,7 +113,7 @@
           </Select>
           <h4>Ingredients</h4>
         </div>
-        {#each $recipe.items as ingredient, i}
+        {#each $recipe.items as ingredient, i (i)}
           <div class="ingredient" in:fade|local out:fade|local>
             <div class="ingredient-info">
               <div class="name">
@@ -124,7 +124,15 @@
                   <Input placeholder="qty" bind:value={ingredient.quantity} />
                 </div>
                 <div class="unit">
-                  <Input placeholder="unit" bind:value={ingredient.unit} />
+                  <Select bind:value={ingredient.unit}>
+                    <option value="tsp">tsp</option>
+                    <option value="tsbp">tsbp</option>
+                    <option value="fl oz">fl oz</option>
+                    <option value="cup">cup</option>
+                    <option value="pint">pint</option>
+                    <option value="quart">quart</option>
+                    <option value="gallon">gallon</option>
+                  </Select>
                 </div>
               </div>
             </div>
@@ -202,12 +210,12 @@
 
   .qty {
     margin-right: 4px;
-    flex: 1 1 auto;
+    flex: 1 1 50%;
   }
 
   .unit {
     margin-left: 4px;
-    flex: 1 1 auto;
+    flex: 1 1 50%;
   }
 
   .step {

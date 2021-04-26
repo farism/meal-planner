@@ -1,7 +1,7 @@
 <script lang="ts">
   import Users from 'svelte-feather-icons/src/icons/UsersIcon.svelte'
   import { fade } from 'svelte/transition'
-  import { activePermission } from '../../firebase'
+  import { settings } from '../../firebase'
   import Button from '../buttons/Button.svelte'
 
   let open = false
@@ -12,11 +12,14 @@
 
   function useMyAccount() {
     open = false
-    activePermission.set(null)
+
+    settings.update((s) => ({ ...s, activePermission: null }))
+
+    window.location.reload()
   }
 </script>
 
-{#if $activePermission}
+{#if $settings?.activePermission}
   {#if open}
     <div class="scrim" on:click={toggleOpen} />
   {/if}
@@ -27,7 +30,7 @@
         <div in:fade|local>
           <div class="using-account">
             <div>Using account:</div>
-            <b>{$activePermission.email}</b>
+            <b>{$settings.activePermission.email}</b>
           </div>
           <Button secondary on:click={useMyAccount}>Use my account</Button>
         </div>

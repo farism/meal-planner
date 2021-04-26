@@ -10,7 +10,7 @@
   import RecipeEdit from './routes/RecipeEdit.svelte'
   import Recipes from './routes/Recipes.svelte'
   import Settings from './routes/Settings.svelte'
-  import Share from './routes/Share.svelte'
+  import SettingsShare from './routes/SettingsShare.svelte'
   import Shopping from './routes/Shopping.svelte'
 
   onMount(() => {
@@ -40,7 +40,7 @@
       <Route path="recipes/create" component={RecipeEdit} />
       <Route path="pantry" component={Pantry} />
       <Route path="settings" component={Settings} />
-      <Route path="settings/share" component={Share} />
+      <Route path="settings/share" component={SettingsShare} />
     </Layout>
   {:else}
     <Route component={Home} />

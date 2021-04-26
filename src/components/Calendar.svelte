@@ -1,7 +1,11 @@
 <script lang="ts">
   import dayjs from 'dayjs'
+  import { get, writable } from 'svelte/store'
+  import type { Readable } from 'svelte/store'
 
   export let date = dayjs()
+
+  export let events: Readable<{ date: dayjs.Dayjs }[]> = writable([])
 
   export let onClickDate = (d: dayjs.Dayjs) => {}
 
@@ -34,24 +38,27 @@
 
 <div class="calendar">
   <div class="head">
-    <div class="cell">Su</div>
-    <div class="cell">Mo</div>
-    <div class="cell">Tu</div>
-    <div class="cell">We</div>
-    <div class="cell">Th</div>
-    <div class="cell">Fr</div>
-    <div class="cell">Sa</div>
+    <div class="head-cell">Su</div>
+    <div class="head-cell">Mo</div>
+    <div class="head-cell">Tu</div>
+    <div class="head-cell">We</div>
+    <div class="head-cell">Th</div>
+    <div class="head-cell">Fr</div>
+    <div class="head-cell">Sa</div>
   </div>
   <div class="body">
     {#each calendarDates as d}
       <div
-        class="cell"
+        class="body-cell"
         class:today={isToday(d)}
         class:adjacent={isAdjacent(d)}
         class:upcoming={isUpcoming(d)}
         on:click={() => onClickDate(d)}
       >
         {d.date()}
+        {#if $events.some(({ date }) => date.isSame(d, 'day'))}
+          <div class="indicator" />
+        {/if}
       </div>
     {/each}
   </div>
@@ -72,7 +79,7 @@
     height: 48px;
   }
 
-  .head .cell {
+  .head-cell {
     align-items: center;
     display: flex;
     justify-content: center;
@@ -84,31 +91,42 @@
     grid-template-columns: repeat(7, 1fr);
   }
 
-  .body .cell {
+  .body-cell {
     align-items: center;
     display: flex;
     justify-content: center;
+    position: relative;
     transition: 0.2s all;
   }
 
-  .body .cell.adjacent {
+  .body-cell.adjacent {
     color: #aaa;
   }
 
-  .body .cell.upcoming {
+  .body-cell.upcoming {
     background-color: var(--primary-color-light2);
   }
 
-  .body .cell.today {
+  .body-cell.today {
     background-color: var(--secondary-color-light);
     font-weight: 700;
   }
 
-  .body .cell::before {
+  .body-cell::before {
     content: '';
     display: flex;
     width: 0;
     height: 0;
     padding-bottom: calc(100%);
+  }
+
+  .indicator {
+    top: 8px;
+    right: 8px;
+    background: var(--primary-color);
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    position: absolute;
   }
 </style>

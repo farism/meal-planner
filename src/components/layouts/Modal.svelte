@@ -11,7 +11,7 @@
 
 {#if visible}
   <div class="scrim" in:fade|local={{ duration: 150 }} on:click={hide} />
-  <div class="modal" in:fade|local={{ duration: 150 }}>
+  <div class="modal">
     <ModalHeader onClickDismiss={hide}>
       <slot name="header" />
     </ModalHeader>
@@ -23,26 +23,34 @@
 
 <style>
   .scrim {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(0, 0, 0, 0.5);
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
     height: 100%;
     left: 0;
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 9998;
   }
 
   .modal {
     background: white;
     border-radius: 8px;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
-    height: 80vh;
-    left: 10vw;
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    left: 10%;
     position: fixed;
-    top: 10vh;
-    width: 80vw;
+    top: 10%;
+    width: 80%;
+    z-index: 9999;
   }
 
   .body {
+    flex: 1 1 auto;
+    display: flex;
+    height: auto;
+    min-height: 0;
   }
 </style>

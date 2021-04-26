@@ -2,12 +2,20 @@ import 'firebase/analytics'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import dayjs from 'dayjs'
 import 'firebase/functions'
-import { omit, uniqBy } from 'lodash-es'
+import { defaults, omit, uniqBy } from 'lodash-es'
 import { onDestroy } from 'svelte'
 import { derived, get, Writable, writable } from 'svelte/store'
 import { pantry } from './pantry'
-import type { PantryItem, Permission, Recipe, SharedPermission } from './types'
+import type {
+  Dish,
+  PantryItem,
+  Permission,
+  Recipe,
+  Settings,
+  SharedPermission,
+} from './types'
 
 type DocumentSnapshot = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
 
@@ -39,14 +47,12 @@ export const db = firebase.firestore()
 export const loading = writable<{ [k: string]: boolean }>({})
 export const checkedSignIn = writable<boolean>(false)
 export const user = writable<firebase.User | null>(null)
-export const activePermission = writable<SharedPermission | null>(
-  loadActivePermission()
-)
-export const canEdit = derived(activePermission, (value) => {
-  return value === null || value.write
+export const settings = writable<Settings>(loadSettings())
+export const canEdit = derived(settings, (value) => {
+  return value?.activePermission === null || value?.activePermission?.write
 })
 
-activePermission.subscribe(saveActivePermission)
+settings.subscribe(saveSettings)
 
 db.enablePersistence()
 
@@ -72,6 +78,18 @@ export function login() {
 
 export function logout() {
   auth.signOut()
+}
+
+export function now() {
+  return firebase.firestore.Timestamp.fromDate(new Date())
+}
+
+export function newDate(day: dayjs.Dayjs) {
+  return firebase.firestore.Timestamp.fromDate(day.toDate())
+}
+
+export function fromTimestamp(value: any): dayjs.Dayjs {
+  return dayjs(value.toDate())
 }
 
 /**
@@ -114,22 +132,26 @@ function initPantry(u: firebase.User) {
   batch.commit()
 }
 
-function loadActivePermission() {
-  return JSON.parse(
-    localStorage.getItem('activePermission') || JSON.stringify(null)
-  )
+function loadSettings(): Settings {
+  const defaultSettings = {
+    mealView: 0,
+    showBreakfast: true,
+    showLunch: true,
+    showDinner: true,
+    activePermission: null,
+  }
+
+  const s = localStorage.getItem('settings') || JSON.stringify(null)
+
+  return JSON.parse(s) || defaultSettings
 }
 
-function saveActivePermission(permission: SharedPermission | null) {
-  localStorage.setItem('activePermission', JSON.stringify(permission))
-}
-
-export function setActivePermission(permission: SharedPermission) {
-  activePermission.set(permission)
+function saveSettings(settings: Settings) {
+  localStorage.setItem('settings', JSON.stringify(settings))
 }
 
 function uid() {
-  const uid = get(activePermission)?.uid
+  const uid = get(settings)?.activePermission?.uid
 
   if (uid) {
     return uid
@@ -146,22 +168,6 @@ function mapQueryData<T>(ref: QuerySnapshot) {
 
 function mapDocData<T>(ref: DocumentSnapshot) {
   return { ...(ref.data() as T), id: ref.id }
-}
-
-export function getDocsFromCache<T>(collection: string): Writable<T[]> {
-  const docs = writable<T[]>([])
-
-  loading.update((state) => ({ ...state, [collection]: true }))
-
-  if (uid()) {
-    db.collection(collection)
-      .where('uid', '==', uid())
-      .get({ source: 'cache' })
-      .then((ref) => mapQueryData<T>(ref))
-      .then(docs.set)
-  }
-
-  return docs
 }
 
 export function getDocs<T>(
@@ -343,16 +349,67 @@ export function removePantryItem(item: PantryItem) {
   }
 }
 
-export function saveRecipe(item: Recipe) {
-  if (item.id === null) {
-    return addDoc<Recipe>('recipes', item)
+export function saveRecipe(recipe: Recipe) {
+  if (recipe.id === null) {
+    return addDoc<Recipe>('recipes', recipe)
   } else {
-    return updateDoc<Recipe>('recipes', item)
+    return updateDoc<Recipe>('recipes', recipe)
   }
 }
 
-export function removeRecipe(item: Recipe) {
-  if (item.id !== null) {
-    removeDoc('recipes', item.id)
+export function removeRecipe(recipe: Recipe) {
+  if (recipe.id !== null) {
+    removeDoc('recipes', recipe.id)
+  }
+}
+
+export function getDishes(start: Date, end: Date) {
+  const docs = writable<Dish[]>([])
+
+  loading.update((state) => ({ ...state, dishes: true }))
+
+  if (uid()) {
+    const unsubscribe = db
+      .collection('dishes')
+      .where('uid', '==', uid())
+      .where('date', '>=', start)
+      .where('date', '<=', end)
+      .onSnapshot((ref) => {
+        docs.set(mapQueryData(ref))
+
+        loading.update((state) => ({ ...state, dishes: false }))
+      })
+
+    onDestroy(unsubscribe)
+  }
+
+  return docs
+}
+
+export function getCalendarDishes(dateStr: string) {
+  return getDishes(
+    dayjs(dateStr).startOf('month').toDate(),
+    dayjs(dateStr).endOf('month').toDate()
+  )
+}
+
+export function getUpcomingDishes() {
+  return getDishes(
+    dayjs().startOf('day').toDate(),
+    dayjs().add(7, 'days').toDate()
+  )
+}
+
+export function saveDish(dish: Dish) {
+  if (dish.id === null) {
+    return addDoc<Dish>('dishes', dish)
+  } else {
+    return updateDoc<Dish>('dishes', dish)
+  }
+}
+
+export function removeDish(dish: Dish) {
+  if (dish.id !== null) {
+    removeDoc('dishes', dish.id)
   }
 }

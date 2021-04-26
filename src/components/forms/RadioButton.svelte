@@ -4,7 +4,7 @@
 </script>
 
 <label>
-  <input type="radio" {value} bind:group />
+  <input type="radio" {value} bind:group on:change />
   <span class="checkbox">
     <span class="checkmark" />
   </span>
@@ -19,7 +19,6 @@
     display: flex;
     justify-content: flex-start;
     position: relative;
-    margin-bottom: 12px;
   }
 
   input {
@@ -35,6 +34,7 @@
 
   input:checked + .checkbox .checkmark {
     background: var(--primary-color);
+    margin: 4px;
   }
 
   .checkbox {
@@ -51,7 +51,8 @@
   .checkmark {
     border-radius: 100%;
     flex: 1 1 auto;
-    margin: 2px;
+    margin: 8px;
+    transition: 0.2s all;
   }
 
   .text {

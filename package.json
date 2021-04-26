@@ -23,7 +23,6 @@
     "rxfire": "^4.0.0",
     "rxjs": "^6.6.7",
     "svelte-feather-icons": "^3.3.0",
-    "svelte-navigator": "^3.1.5",
-    "svelte-routing": "^1.5.0"
+    "svelte-navigator": "^3.1.5"
   }
 }
