@@ -9,7 +9,7 @@ export interface SharedPermission {
 
 export interface Settings {
   activePermission: SharedPermission | null
-  mealView: 0 | 1
+  mealView: number
   showBreakfast: boolean
   showLunch: boolean
   showDinner: boolean

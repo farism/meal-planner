@@ -1,5 +1,4 @@
 <script lang="ts">
-  import X from 'svelte-feather-icons/src/icons/XIcon.svelte'
   import ScrollShadow from '../utils/ScrollShadow.svelte'
   import ModalHeader from './ModalHeader.svelte'
 
@@ -48,6 +47,7 @@
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 4;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -89,32 +89,6 @@
     top: 25%;
     width: 100%;
     will-change: opacity, transform;
-  }
-
-  .header {
-    align-items: center;
-    display: flex;
-    flex: 0 0 auto;
-    padding: 30px;
-  }
-
-  .header h2 {
-    flex: 1 1 auto;
-    margin: 0;
-  }
-
-  .header .dismiss {
-    align-items: center;
-    background: none;
-    border: none;
-    display: flex;
-    flex: 0 0 auto;
-    height: 32px;
-    justify-content: center;
-    outline: none;
-    margin-left: 12px;
-    padding: 0;
-    width: 32px;
   }
 
   .body {

@@ -125,6 +125,7 @@
                 </div>
                 <div class="unit">
                   <Select bind:value={ingredient.unit}>
+                    <option>unit</option>
                     <option value="tsp">tsp</option>
                     <option value="tsbp">tsbp</option>
                     <option value="fl oz">fl oz</option>

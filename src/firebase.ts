@@ -4,7 +4,7 @@ import 'firebase/auth'
 import 'firebase/firestore'
 import dayjs from 'dayjs'
 import 'firebase/functions'
-import { defaults, omit, uniqBy } from 'lodash-es'
+import { defaults, omit, transform, uniqBy } from 'lodash-es'
 import { onDestroy } from 'svelte'
 import { derived, get, Writable, writable } from 'svelte/store'
 import { pantry } from './pantry'
@@ -133,7 +133,7 @@ function initPantry(u: firebase.User) {
 }
 
 function loadSettings(): Settings {
-  const defaultSettings = {
+  const defaultSettings: Settings = {
     mealView: 0,
     showBreakfast: true,
     showLunch: true,
@@ -141,9 +141,14 @@ function loadSettings(): Settings {
     activePermission: null,
   }
 
-  const s = localStorage.getItem('settings') || JSON.stringify(null)
+  const s =
+    JSON.parse(localStorage.getItem('settings') || JSON.stringify(null)) ||
+    defaultSettings
 
-  return JSON.parse(s) || defaultSettings
+  return {
+    ...s,
+    // mealView: parseInt(String(s.mealView), 10),
+  }
 }
 
 function saveSettings(settings: Settings) {

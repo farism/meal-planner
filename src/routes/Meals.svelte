@@ -1,15 +1,16 @@
 <script lang="ts">
   import dayjs from 'dayjs'
-  import type { Dish, DishType, MealTime, PantryItem, Recipe } from 'src/types'
   import ChevronLeftIcon from 'svelte-feather-icons/src/icons/ChevronLeftIcon.svelte'
   import ChevronRightIcon from 'svelte-feather-icons/src/icons/ChevronRightIcon.svelte'
   import { navigate } from 'svelte-navigator'
   import { derived, get, readable } from 'svelte/store'
   import Button from '../components/buttons/Button.svelte'
+  import FabRemove from '../components/buttons/FABRemove.svelte'
   import Calendar from '../components/Calendar.svelte'
   import BottomSheet from '../components/layouts/BottomSheet.svelte'
   import Card from '../components/layouts/Card.svelte'
   import DishList from '../components/layouts/DishList.svelte'
+  import FabPanel from '../components/layouts/FABPanel.svelte'
   import List from '../components/layouts/List.svelte'
   import Modal from '../components/layouts/Modal.svelte'
   import Tabs from '../components/layouts/Tabs.svelte'
@@ -19,12 +20,13 @@
     fromTimestamp,
     getCalendarDishes,
     getDocs,
+    getUpcomingDishes,
     loading,
     removeDish,
     saveDish,
     settings,
-    getUpcomingDishes,
   } from '../firebase'
+  import type { Dish, DishType, MealTime, PantryItem, Recipe } from '../types'
 
   export let location = ''
 
@@ -45,11 +47,7 @@
 
   let selectDishTab = 0
 
-  let isRemovingBreakfast = false
-
-  let isRemovingLunch = false
-
-  let isRemovingDinner = false
+  let isRemoving = false
 
   let activeMealTime: MealTime = 'Breakfast'
 
@@ -93,8 +91,16 @@
     d.filter(({ mealTime }) => mealTime === 'Dinner')
   )
 
-  function onClickTab(i: number) {
-    date = dayjs()
+  function onClickAdd() {
+    navigate('/recipes/create')
+  }
+
+  function onClickRemove() {
+    isRemoving = !isRemoving
+  }
+
+  function onRemoveDish(dish: Dish) {
+    removeDish(dish)
   }
 
   function prevMonth() {
@@ -120,17 +126,13 @@
     showBottomSheet = true
   }
 
-  function onClickUpcoming({ date }: { date: dayjs.Dayjs }) {
-    onClickDate(date)
-  }
+  // function onClickUpcoming({ date }: { date: dayjs.Dayjs }) {
+  //   onClickDate(date)
+  // }
 
   function onClickAddDish(mealTime: MealTime) {
     activeMealTime = mealTime
     showModal = true
-  }
-
-  function onClickRemove(dish: Dish) {
-    removeDish(dish)
   }
 
   function onClickDish(dish: Dish) {
@@ -199,9 +201,25 @@
         <div class="month-year" on:click={() => onClickDate(d.date)}>
           {d.date.format('MMMM DD')}
         </div>
-        <DishList docs={d.dishes} onClick={onClickDish} emptyMessage="" />
+        <DishList
+          docs={d.dishes}
+          onClick={onClickDish}
+          onRemove={onRemoveDish}
+          removing={isRemoving}
+          emptyMessage=""
+        />
       </Card>
     {/each}
+  </div>
+{/if}
+
+{#if $canEdit}
+  <div class="fab-panel">
+    <FabPanel>
+      {#if $canEdit}
+        <FabRemove on:click={onClickRemove} {isRemoving} />
+      {/if}
+    </FabPanel>
   </div>
 {/if}
 
@@ -210,7 +228,7 @@
   open={showBottomSheet}
   onClickDismiss={() => (showBottomSheet = false)}
 >
-  <div class="calendar-controls no-pad" slot="heading">
+  <div class="calendar-controls bottom-sheet" slot="heading">
     <Button secondary on:click={prevDay}>
       <ChevronLeftIcon />
     </Button>
@@ -234,8 +252,8 @@
           <DishList
             docs={breakfast}
             onClick={onClickDish}
-            onRemove={onClickRemove}
-            isRemoving={isRemovingBreakfast}
+            onRemove={onRemoveDish}
+            removing={isRemoving}
           />
         </div>
       </Card>
@@ -252,8 +270,8 @@
           <DishList
             docs={lunch}
             onClick={onClickDish}
-            onRemove={onClickRemove}
-            isRemoving={isRemovingLunch}
+            onRemove={onRemoveDish}
+            removing={isRemoving}
           />
         </div>
       </Card>
@@ -270,8 +288,8 @@
           <DishList
             docs={dinner}
             onClick={onClickDish}
-            onRemove={onClickRemove}
-            isRemoving={isRemovingDinner}
+            onRemove={onRemoveDish}
+            removing={isRemoving}
           />
         </div>
       </Card>
@@ -296,10 +314,15 @@
 </Modal>
 
 <style>
+  .fab-panel {
+    position: relative;
+    z-index: 20;
+  }
+
   .tabs {
     position: sticky;
     top: 0;
-    z-index: 9;
+    z-index: 3;
   }
 
   .upcoming-list {
@@ -314,9 +337,17 @@
     padding: 16px;
   }
 
-  .calendar-controls.no-pad {
+  .calendar-controls.bottom-sheet {
     margin: 0 24px 0 0;
     padding: 0;
+  }
+
+  .calendar-controls.bottom-sheet .month-year {
+    font-size: 16px;
+  }
+
+  .calendar-controls.bottom-sheet :global(button) {
+    --button-height: 36px;
   }
 
   .calendar-controls :global(button) {
@@ -326,7 +357,7 @@
 
   .month-year {
     font-size: 24px;
-    padding: 6px 30px;
+    padding: 6px 12px;
   }
 
   .modal-body {

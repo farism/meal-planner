@@ -34,7 +34,11 @@
     flex: 1 1 auto;
     font-size: 18px;
     margin: 0;
-    padding: 18px;
+    padding: 0 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
     outline: 0;
   }
 

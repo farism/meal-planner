@@ -26,9 +26,9 @@
     {#if $docs.length > 0}
       <ul class="list" class:removing>
         {#each $docs as item (item[keyField])}
-          <li class="item" out:fade|local={{ duration: removing ? 300 : 0 }}>
+          <li class="item" out:fade|local={{ duration: removing ? 200 : 0 }}>
             <RemoveButton class="item-remove" on:click={() => onRemove(item)} />
-            <div class="item-name" on:click={() => onClick(item)}>
+            <div class="item-name" on:click={() => !removing && onClick(item)}>
               {#if hasDefaultSlot}
                 <slot {item} />
               {:else}

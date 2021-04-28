@@ -24,7 +24,7 @@
   function onChangeDefaultMealView(e: Event) {
     settings.update((s) => ({
       ...s,
-      mealView: (e.target as HTMLInputElement).value as any,
+      mealView: parseInt((e.target as HTMLInputElement).value as any, 10),
     }))
   }
 </script>

@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>meal planner</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/icon/120.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icon/152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/180.png" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
     />
     <script>
       // vite compatibility for npm modules that reference global
       window.global = window
     </script>
     <style>
-      html,
-      body {
-        background: rgb(245, 245, 245);
-        height: 100%;
-        overflow: hidden;
-      }
-
       body {
         -webkit-tap-highlight-color: transparent;
+        background: rgb(245, 245, 245);
         font-family: 'Inter', sans-serif;
+        height: 100%;
         margin: 0;
+        overflow: hidden;
         padding: 0;
       }
 
@@ -38,4 +38,11 @@
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').then(function () {
+        console.log('Service Worker Registered')
+      })
+    }
+  </script>
 </html>
