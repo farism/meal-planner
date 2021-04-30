@@ -5,7 +5,17 @@
   export let ref: HTMLInputElement | null = null
 </script>
 
-<input bind:value bind:this={ref} {name} {placeholder} />
+<input
+  on:click
+  on:focus
+  on:blur
+  on:input
+  on:change
+  bind:value
+  bind:this={ref}
+  {name}
+  {placeholder}
+/>
 
 <style>
   input {

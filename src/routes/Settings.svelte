@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { NavigateFn } from 'svelte-navigator'
   import { Link } from 'svelte-navigator'
   import Button from '../components/buttons/Button.svelte'
   import Checkbox from '../components/forms/Checkbox.svelte'
@@ -10,7 +11,7 @@
 
   export let location = ''
 
-  let defaultView = 'calendar'
+  export let navigate: NavigateFn
 
   function onChangeEnabledMealTime(time: keyof Settings) {
     return function (e: Event) {

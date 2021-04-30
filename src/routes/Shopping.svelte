@@ -1,8 +1,17 @@
 <script lang="ts">
-  import BottomSheet from '../components/layouts/BottomSheet.svelte'
-  import Header from '../components/layouts/Header.svelte'
+  import type { NavigateFn } from 'svelte-navigator';
+  import FabCreate from '../components/buttons/FABCreate.svelte';
+  import FabRemove from '../components/buttons/FABRemove.svelte';
+  import BottomSheet from '../components/layouts/BottomSheet.svelte';
+  import FabPanel from '../components/layouts/FABPanel.svelte';
+  import Header from '../components/layouts/Header.svelte';
+  import { canEdit } from '../firebase';
+  import type { ShoppingItem } from '../types';
+
 
   export let location = ''
+
+  export let navigate: NavigateFn
 
   let showBottomSheet = false
 
@@ -15,6 +24,14 @@
   } else {
     document.body.classList.remove('bottomsheet-open')
   }
+
+  function onClickRemove() {
+    isRemoving = !isRemoving
+  }
+
+  function onRemoveItem(item: ShoppingItem) {
+    // removeDish(dish)
+  }
 </script>
 
 <div class="content">
@@ -22,6 +39,17 @@
     <div>Shopping List</div>
   </Header>
 </div>
+
+{#if $canEdit}
+  <div class="fab-panel">
+    <FabPanel>
+      {#if $canEdit}
+        <FabRemove on:click={onClickRemove} {isRemoving} />
+        <FabCreate on:click={onClickRemove} {isRemoving} />
+      {/if}
+    </FabPanel>
+  </div>
+{/if}
 
 <BottomSheet
   heading="bottom sheet"

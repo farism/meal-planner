@@ -2,7 +2,8 @@
   import dayjs from 'dayjs'
   import ChevronLeftIcon from 'svelte-feather-icons/src/icons/ChevronLeftIcon.svelte'
   import ChevronRightIcon from 'svelte-feather-icons/src/icons/ChevronRightIcon.svelte'
-  import { navigate } from 'svelte-navigator'
+  import type { NavigateFn } from 'svelte-navigator'
+
   import { derived, get, readable } from 'svelte/store'
   import Button from '../components/buttons/Button.svelte'
   import FabRemove from '../components/buttons/FABRemove.svelte'
@@ -29,6 +30,8 @@
   import type { Dish, DishType, MealTime, PantryItem, Recipe } from '../types'
 
   export let location = ''
+
+  export let navigate: NavigateFn
 
   const staticUpcomingDates = readable(
     Array.from(Array(7).keys()).map((i) => dayjs().add(i, 'day')),
@@ -91,10 +94,6 @@
     d.filter(({ mealTime }) => mealTime === 'Dinner')
   )
 
-  function onClickAdd() {
-    navigate('/recipes/create')
-  }
-
   function onClickRemove() {
     isRemoving = !isRemoving
   }
@@ -126,17 +125,12 @@
     showBottomSheet = true
   }
 
-  // function onClickUpcoming({ date }: { date: dayjs.Dayjs }) {
-  //   onClickDate(date)
-  // }
-
   function onClickAddDish(mealTime: MealTime) {
     activeMealTime = mealTime
     showModal = true
   }
 
   function onClickDish(dish: Dish) {
-    console.log(dish)
     if (dish.recipe?.id) {
       navigate(`/recipes/${dish.recipe?.id}`)
     }

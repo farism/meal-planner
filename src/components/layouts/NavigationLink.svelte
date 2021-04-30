@@ -31,12 +31,12 @@
     display: inline-flex;
     flex-direction: column;
     flex: 1 1 0;
+    font-size: 12px;
     height: 100%;
     justify-content: center;
     padding: 0 16px;
     text-decoration: none;
     transition: 0.2s all;
-    font-size: 12px;
   }
 
   :global(.navigation-link.active) {

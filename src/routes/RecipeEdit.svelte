@@ -1,18 +1,21 @@
 <script lang="ts">
-  import { navigate } from 'svelte-navigator'
+  import type { NavigateFn } from 'svelte-navigator'
   import { get, writable } from 'svelte/store'
   import { fade } from 'svelte/transition'
   import Button from '../components/buttons/Button.svelte'
   import RemoveButton from '../components/buttons/RemoveButton.svelte'
+  import Autocomplete from '../components/forms/Autocomplete.svelte'
   import Errors from '../components/forms/Errors.svelte'
   import Input from '../components/forms/Input.svelte'
   import Select from '../components/forms/Select.svelte'
   import TextArea from '../components/forms/TextArea.svelte'
   import Header from '../components/layouts/Header.svelte'
-  import { getDoc, saveRecipe } from '../firebase'
-  import type { Recipe } from '../types'
+  import { getDoc, getDocs, saveRecipe } from '../firebase'
+  import type { PantryItem, Recipe } from '../types'
 
   export let location: string = ''
+
+  export let navigate: NavigateFn
 
   export let id: string | null = null
 
@@ -32,6 +35,8 @@
 
   $: recipe =
     id === null ? writable(defaultRecipe) : getDoc<Recipe>('recipes', id)
+
+  $: pantry = getDocs<PantryItem>('pantry')
 
   function addItem() {
     if ($recipe) {
@@ -117,7 +122,11 @@
           <div class="ingredient" in:fade|local out:fade|local>
             <div class="ingredient-info">
               <div class="name">
-                <Input placeholder="name" bind:value={ingredient.item.name} />
+                <Autocomplete
+                  docs={pantry}
+                  placeholder="name"
+                  bind:value={ingredient.item.name}
+                />
               </div>
               <div class="serving">
                 <div class="qty">

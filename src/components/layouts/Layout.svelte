@@ -22,7 +22,7 @@
   }
 
   .body {
-    bottom: 50px;
+    bottom: var(--nav-height);
     left: 0;
     overflow: auto;
     position: absolute;
@@ -32,7 +32,7 @@
   }
 
   .navigation {
-    height: 50px;
+    height: var(--nav-height);
     position: fixed;
     bottom: 0;
     width: 100%;

@@ -21,7 +21,7 @@
 <FAB color="warning" on:click {disabled}>
   {#if isRemoving}
     <span class="icon" in:spin|local>
-      <XIcon size="24" slot="icon2" />
+      <XIcon size="24" />
     </span>
   {:else}
     <span
@@ -33,7 +33,7 @@
       on:outrostart={disable}
       on:outroend={enable}
     >
-      <TrashIcon size="24" slot="icon1" />
+      <TrashIcon size="24" />
     </span>
   {/if}
 </FAB>

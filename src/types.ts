@@ -65,8 +65,9 @@ export interface Dish {
   type: DishType
 }
 
-export interface ShoppingList {
+export interface ShoppingItem {
   id: string | null
   uid: string | null
   name: string
+  usedBy: Dish
 }

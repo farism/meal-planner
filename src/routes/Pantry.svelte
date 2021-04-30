@@ -1,5 +1,6 @@
 <script lang="ts">
   import { orderBy } from 'lodash-es'
+  import type { NavigateFn } from 'svelte-navigator'
   import { derived } from 'svelte/store'
   import Button from '../components/buttons/Button.svelte'
   import FABCreate from '../components/buttons/FABCreate.svelte'
@@ -25,6 +26,8 @@
 
   export let location = ''
 
+  export let navigate: NavigateFn
+
   const defaultPantryItem: PantryItem = {
     id: null,
     uid: null,
@@ -35,8 +38,6 @@
   let nameRef: HTMLInputElement
 
   let activeItem: PantryItem = defaultPantryItem
-
-  let showListConfig = false
 
   let showBottomSheet = false
 
@@ -81,10 +82,6 @@
     document.body.classList.remove('bottomsheet-open')
 
     setTimeout(resetBottomSheet, 100)
-  }
-
-  function toggleListConfig() {
-    showListConfig = !showListConfig
   }
 
   function resetBottomSheet() {
@@ -135,14 +132,10 @@
   />
 </div>
 
-<ListConfig
-  bind:visible={showListConfig}
-  bind:sort={sortByField}
-  bind:direction={sortDirection}
-/>
-
 <FABPanel>
-  <FABSettings on:click={toggleListConfig} />
+  <FABSettings>
+    <ListConfig bind:sort={sortByField} bind:direction={sortDirection} />
+  </FABSettings>
   {#if $canEdit}
     <FABRemove on:click={onClickRemove} {isRemoving} />
     <FABCreate on:click={onClickAdd} />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigate } from 'svelte-navigator'
+  import type { NavigateFn } from 'svelte-navigator'
   import FABEdit from '../components/buttons/FABEdit.svelte'
   import FABPanel from '../components/layouts/FABPanel.svelte'
   import Header from '../components/layouts/Header.svelte'
@@ -7,6 +7,8 @@
   import type { Recipe } from '../types'
 
   export let location: string = ''
+
+  export let navigate: NavigateFn
 
   export let fullview: boolean = true
 

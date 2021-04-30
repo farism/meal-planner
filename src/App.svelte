@@ -31,8 +31,7 @@
 <Router primary={false}>
   {#if $user}
     <Layout>
-      <Route path="/" component={Home} />
-      <Route path="meals" component={Meals} />
+      <Route component={Meals} />
       <Route path="shopping" component={Shopping} />
       <Route path="recipes" component={Recipes} />
       <Route path="recipes/:id" component={Recipe} />
@@ -49,6 +48,7 @@
 
 <style>
   :global(:root) {
+    --nav-height: calc(50px + env(safe-area-inset-bottom, 0));
     --button-font-size: 24px;
     --button-height: 48px;
 

@@ -4,7 +4,7 @@
 
 <style>
   .fab-panel {
-    bottom: 66px;
+    bottom: calc(var(--nav-height) + 16px);
     display: flex;
     flex-direction: column;
     position: fixed;

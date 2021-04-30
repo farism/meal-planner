@@ -1,21 +1,21 @@
 <script lang="ts">
   import { orderBy } from 'lodash-es'
-  import { navigate } from 'svelte-navigator'
+  import type { NavigateFn } from 'svelte-navigator'
   import { derived } from 'svelte/store'
-  import FabCreate from '../components/buttons/FABCreate.svelte'
-  import FabRemove from '../components/buttons/FABRemove.svelte'
-  import FabSettings from '../components/buttons/FABSettings.svelte'
+  import FABCreate from '../components/buttons/FABCreate.svelte'
+  import FABRemove from '../components/buttons/FABRemove.svelte'
+  import FABSettings from '../components/buttons/FABSettings.svelte'
   import Search from '../components/forms/Search.svelte'
-  import FabPanel from '../components/layouts/FABPanel.svelte'
+  import FABPanel from '../components/layouts/FABPanel.svelte'
   import Header from '../components/layouts/Header.svelte'
   import List from '../components/layouts/List.svelte'
   import ListConfig from '../components/utils/ListConfig.svelte'
   import { canEdit, getDocs, loading, removeRecipe } from '../firebase'
   import type { Recipe } from '../types'
 
-  export let location = ''
+  export let location: string
 
-  let showListConfig = false
+  export let navigate: NavigateFn
 
   let isRemoving = false
 
@@ -41,10 +41,6 @@
       ? ordered
       : ordered.filter((item) => item.name.toLowerCase().includes(searchCheck))
   })
-
-  function toggleListConfig() {
-    showListConfig = !showListConfig
-  }
 
   function onClickAdd() {
     navigate('/recipes/create')
@@ -75,19 +71,15 @@
   />
 </div>
 
-<ListConfig
-  bind:visible={showListConfig}
-  bind:sort={sortByField}
-  bind:direction={sortDirection}
-/>
-
-<FabPanel>
-  <FabSettings on:click={toggleListConfig} />
+<FABPanel>
+  <FABSettings>
+    <ListConfig bind:sort={sortByField} bind:direction={sortDirection} />
+  </FABSettings>
   {#if $canEdit}
-    <FabRemove on:click={onClickRemove} {isRemoving} />
-    <FabCreate on:click={onClickAdd} />
+    <FABRemove on:click={onClickRemove} {isRemoving} />
+    <FABCreate on:click={onClickAdd} />
   {/if}
-</FabPanel>
+</FABPanel>
 
 <style>
   :global(body.bottomsheet-open) .content {

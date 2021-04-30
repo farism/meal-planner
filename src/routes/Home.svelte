@@ -1,9 +1,13 @@
 <script lang="ts">
-  import GoogleSignIn from '../components/buttons/GoogleSignIn.svelte'
-  import Spinner from '../components/utils/Spinner.svelte'
-  import { checkedSignIn, login, user } from '../firebase'
+import type { NavigateFn } from 'svelte-navigator';
+import GoogleSignIn from '../components/buttons/GoogleSignIn.svelte';
+import Spinner from '../components/utils/Spinner.svelte';
+import { checkedSignIn,login,user } from '../firebase';
+
 
   export let location = ''
+
+  export let navigate: NavigateFn
 </script>
 
 <div class="home">
