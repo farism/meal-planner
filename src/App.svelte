@@ -1,9 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { Route, Router } from 'svelte-navigator'
+  import AuthError from './components/layouts/AuthError.svelte'
   import Layout from './components/layouts/Layout.svelte'
-  import { user } from './firebase'
-  import Home from './routes/Home.svelte'
+  import { authError, user } from './firebase'
+  import Login from './routes/Login.svelte'
   import Meals from './routes/Meals.svelte'
   import Pantry from './routes/Pantry.svelte'
   import Recipe from './routes/Recipe.svelte'
@@ -12,6 +13,8 @@
   import Settings from './routes/Settings.svelte'
   import SettingsShare from './routes/SettingsShare.svelte'
   import Shopping from './routes/Shopping.svelte'
+
+  $: showAuthError = $authError !== ''
 
   onMount(() => {
     document.addEventListener(
@@ -42,27 +45,25 @@
       <Route path="settings/share" component={SettingsShare} />
     </Layout>
   {:else}
-    <Route component={Home} />
+    <Route component={Login} />
   {/if}
 </Router>
+
+<AuthError />
 
 <style>
   :global(:root) {
     --nav-height: calc(50px + env(safe-area-inset-bottom, 0));
     --button-font-size: 24px;
     --button-height: 48px;
-
     --input-border-width: 2px;
     --input-font-size: 20px;
     --input-height: 44px;
     --input-placeholder-color: rgb(188, 188, 188);
-
     --textarea-height: 128px;
-
     --item-highlight-color: rgb(235, 235, 235);
-
     --border-color: rgb(188, 188, 188);
-
+    --border-color-disabled: rgb(225, 225, 225);
     --body-color: rgb(51, 51, 51);
     --primary-color: rgb(76, 214, 76);
     --primary-color-light: rgb(182, 236, 182);

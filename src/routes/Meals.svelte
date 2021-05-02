@@ -172,23 +172,10 @@
 </script>
 
 <div class="tabs">
-  <Tabs tabs={['Calendar', 'Upcoming']} bind:active={mealViewTab} />
+  <Tabs tabs={['Upcoming', 'Calendar']} bind:active={mealViewTab} />
 </div>
 
-{#if mealViewTab === 0}
-  <div class="calendar-controls">
-    <Button secondary on:click={prevMonth}>
-      <ChevronLeftIcon />
-    </Button>
-    <div class="month-year">
-      {date.format('MMMM YYYY')}
-    </div>
-    <Button secondary on:click={nextMonth}>
-      <ChevronRightIcon />
-    </Button>
-  </div>
-  <Calendar bind:date events={calendarDishes} {onClickDate} />
-{:else if !$loading['dishes']}
+{#if mealViewTab === 0 && !$loading['dishes']}
   <div class="upcoming-list">
     {#each $upcomingDates as d}
       <Card>
@@ -205,6 +192,19 @@
       </Card>
     {/each}
   </div>
+{:else if mealViewTab === 1}
+  <div class="calendar-controls">
+    <Button secondary on:click={prevMonth}>
+      <ChevronLeftIcon />
+    </Button>
+    <div class="month-year">
+      {date.format('MMMM YYYY')}
+    </div>
+    <Button secondary on:click={nextMonth}>
+      <ChevronRightIcon />
+    </Button>
+  </div>
+  <Calendar bind:date events={calendarDishes} {onClickDate} />
 {/if}
 
 {#if $canEdit}
@@ -217,11 +217,7 @@
   </div>
 {/if}
 
-<BottomSheet
-  heading={''}
-  open={showBottomSheet}
-  onClickDismiss={() => (showBottomSheet = false)}
->
+<BottomSheet heading={''} bind:open={showBottomSheet}>
   <div class="calendar-controls bottom-sheet" slot="heading">
     <Button secondary on:click={prevDay}>
       <ChevronLeftIcon />

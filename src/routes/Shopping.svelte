@@ -1,13 +1,12 @@
 <script lang="ts">
-  import type { NavigateFn } from 'svelte-navigator';
-  import FabCreate from '../components/buttons/FABCreate.svelte';
-  import FabRemove from '../components/buttons/FABRemove.svelte';
-  import BottomSheet from '../components/layouts/BottomSheet.svelte';
-  import FabPanel from '../components/layouts/FABPanel.svelte';
-  import Header from '../components/layouts/Header.svelte';
-  import { canEdit } from '../firebase';
-  import type { ShoppingItem } from '../types';
-
+  import type { NavigateFn } from 'svelte-navigator'
+  import FabCreate from '../components/buttons/FABCreate.svelte'
+  import FabRemove from '../components/buttons/FABRemove.svelte'
+  import BottomSheet from '../components/layouts/BottomSheet.svelte'
+  import FabPanel from '../components/layouts/FABPanel.svelte'
+  import Header from '../components/layouts/Header.svelte'
+  import { canEdit } from '../firebase'
+  import type { ShoppingItem } from '../types'
 
   export let location = ''
 
@@ -51,11 +50,7 @@
   </div>
 {/if}
 
-<BottomSheet
-  heading="bottom sheet"
-  open={showBottomSheet}
-  onClickDismiss={() => (showBottomSheet = false)}
->
+<BottomSheet heading="bottom sheet" bind:open={showBottomSheet}>
   <p>bottom sheet</p>
 </BottomSheet>
 

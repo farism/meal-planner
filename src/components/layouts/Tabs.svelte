@@ -38,7 +38,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 50px;
+    height: 64px;
     outline: 0;
   }
 

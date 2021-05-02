@@ -1,10 +1,10 @@
+import dayjs from 'dayjs'
 import 'firebase/analytics'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import dayjs from 'dayjs'
 import 'firebase/functions'
-import { defaults, omit, transform, uniqBy } from 'lodash-es'
+import { omit, uniqBy } from 'lodash-es'
 import { onDestroy } from 'svelte'
 import { derived, get, Writable, writable } from 'svelte/store'
 import { pantry } from './pantry'
@@ -47,6 +47,7 @@ export const db = firebase.firestore()
 export const loading = writable<{ [k: string]: boolean }>({})
 export const checkedSignIn = writable<boolean>(false)
 export const user = writable<firebase.User | null>(null)
+export const authError = writable('')
 export const settings = writable<Settings>(loadSettings())
 export const canEdit = derived(settings, (value) => {
   return value?.activePermission === null || value?.activePermission?.write
@@ -67,7 +68,9 @@ auth
       initFirstTimeUser(cred.user)
     }
   })
-  .catch(console.error)
+  .catch((e) => {
+    authError.set(e.message)
+  })
   .finally(() => {
     checkedSignIn.set(true)
   })
@@ -76,8 +79,16 @@ export function login() {
   auth.signInWithRedirect(provider)
 }
 
+export function loginAnonymous() {
+  auth.signInAnonymously().then((u) => user.set(u.user))
+}
+
 export function logout() {
   auth.signOut()
+}
+
+export function linkAccount() {
+  auth.currentUser?.linkWithRedirect(provider)
 }
 
 export function now() {
@@ -141,14 +152,10 @@ function loadSettings(): Settings {
     activePermission: null,
   }
 
-  const s =
+  return (
     JSON.parse(localStorage.getItem('settings') || JSON.stringify(null)) ||
     defaultSettings
-
-  return {
-    ...s,
-    // mealView: parseInt(String(s.mealView), 10),
-  }
+  )
 }
 
 function saveSettings(settings: Settings) {

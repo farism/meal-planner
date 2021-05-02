@@ -124,11 +124,7 @@
   <FABCreate on:click={onClickAdd} />
 </FABPanel>
 
-<BottomSheet
-  heading={bottomSheetHeader}
-  open={showBottomSheet}
-  onClickDismiss={() => (showBottomSheet = false)}
->
+<BottomSheet heading={bottomSheetHeader} bind:open={showBottomSheet}>
   <div class="bottom-sheet">
     {#if activeIsOwned}
       {#if errors.length > 0}

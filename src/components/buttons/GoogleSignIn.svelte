@@ -23,19 +23,21 @@
 
 <style>
   button {
-    display: flex;
     align-items: center;
-    justify-content: center;
+    background-color: white;
     border: 0;
+    border-radius: 2px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
     padding: 12px;
     width: 100%;
   }
 
   svg {
-    width: 32px;
     height: 32px;
     margin-right: 32px;
+    width: 32px;
   }
 
   span {

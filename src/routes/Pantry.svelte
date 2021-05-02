@@ -144,8 +144,7 @@
 
 <BottomSheet
   heading={`${editHeaderLabel} Pantry Item`}
-  open={showBottomSheet}
-  onClickDismiss={() => (showBottomSheet = false)}
+  bind:open={showBottomSheet}
 >
   <div class="bottom-sheet">
     {#if errors.length > 0}

@@ -4,6 +4,8 @@
 
   export let visible = false
 
+  export let shrink = true
+
   function hide() {
     visible = false
   }
@@ -11,7 +13,7 @@
 
 {#if visible}
   <div class="scrim" in:fade|local={{ duration: 150 }} on:click={hide} />
-  <div class="modal">
+  <div class="modal" class:shrink>
     <ModalHeader onClickDismiss={hide}>
       <slot name="header" />
     </ModalHeader>
@@ -45,6 +47,12 @@
     top: 10%;
     width: 80%;
     z-index: 9999;
+  }
+
+  .modal.shrink {
+    height: auto;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .body {

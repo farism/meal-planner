@@ -1,4 +1,5 @@
 <script lang="ts">
+  import GoogleSignIn from '../components/buttons/GoogleSignIn.svelte'
   import type { NavigateFn } from 'svelte-navigator'
   import { Link } from 'svelte-navigator'
   import Button from '../components/buttons/Button.svelte'
@@ -6,12 +7,14 @@
   import RadioButton from '../components/forms/RadioButton.svelte'
   import Card from '../components/layouts/Card.svelte'
   import Header from '../components/layouts/Header.svelte'
-  import { logout, settings, user } from '../firebase'
+  import { linkAccount, logout, settings, user } from '../firebase'
   import type { Settings } from '../types'
 
   export let location = ''
 
   export let navigate: NavigateFn
+
+  $: isAnonymous = $user && !$user.email
 
   function onChangeEnabledMealTime(time: keyof Settings) {
     return function (e: Event) {
@@ -38,14 +41,26 @@
   <div class="body">
     {#if $user}
       <div class="user">
-        {#if $user?.photoURL}
+        {#if isAnonymous}
+          <div class="anonymous">
+            <div>You are logged in anonymously.</div>
+            <div>
+              Please link your account if you would like to access extra
+              features.
+            </div>
+            <GoogleSignIn on:click={linkAccount} />
+          </div>
+        {/if}
+        {#if $user.photoURL}
           <div class="avatar">
             <img src={$user.photoURL} alt="User Photo" />
           </div>
         {/if}
-        <div class="name">
-          {$user.displayName}
-        </div>
+        {#if $user.displayName}
+          <div class="name">
+            {$user.displayName}
+          </div>
+        {/if}
         <Card>
           <h5>Default Meal View</h5>
           <RadioButton
@@ -53,14 +68,14 @@
             on:change={onChangeDefaultMealView}
             value={0}
           >
-            Calendar
+            Upcoming
           </RadioButton>
           <RadioButton
             bind:group={$settings.mealView}
             on:change={onChangeDefaultMealView}
             value={1}
           >
-            Upcoming
+            Calendar
           </RadioButton>
         </Card>
         <Card>
@@ -84,11 +99,27 @@
             Show Dinner
           </Checkbox>
         </Card>
+        <Card>
+          <h5>Account Sharing</h5>
+          <div class="sharing">
+            {#if $user.email}
+              <Link to="/settings/share" disabled>
+                <Button secondary>Share Account</Button>
+              </Link>
+            {:else}
+              <div>Cannot share an anonymous account</div>
+              <Button secondary disabled>Share Account</Button>
+            {/if}
+          </div>
+        </Card>
         <div class="buttons">
-          <Link to="/settings/share">
-            <Button secondary>Account Sharing</Button>
-          </Link>
           <Button warning on:click={logout}>Sign Out</Button>
+          {#if isAnonymous}
+            <div class="anonymous warning">
+              Warning! You are currently using an anonymous account. If you sign
+              out you will not be able to access your data.
+            </div>
+          {/if}
         </div>
       </div>
     {/if}
@@ -109,13 +140,38 @@
 
   .avatar {
     border-radius: 100%;
+    height: 96px;
     overflow: hidden;
     width: 96px;
-    height: 96px;
   }
 
   .avatar img {
     width: 100%;
+  }
+
+  .sharing {
+    margin-top: 24px;
+  }
+
+  .sharing div {
+    color: var(--secondary-color);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .anonymous {
+    color: var(--secondary-color);
+    line-height: 24px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .anonymous :global(button) {
+    margin: 24px 0;
+  }
+
+  .anonymous div {
+    margin: 24px 0;
   }
 
   .name {
@@ -127,8 +183,8 @@
   }
 
   #settings :global(.card label) {
-    width: 100%;
     margin-top: 24px;
+    width: 100%;
   }
 
   .buttons {
@@ -140,5 +196,9 @@
     display: flex;
     margin-bottom: 24px;
     width: 100%;
+  }
+
+  .warning {
+    color: var(--warning-color);
   }
 </style>

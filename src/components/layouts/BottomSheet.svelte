@@ -8,8 +8,6 @@
 
   export let scrimWillClose = true
 
-  export let onClickDismiss = () => {}
-
   $: if (open) {
     document.body.classList.add('bottomsheet-open')
   } else {
@@ -20,11 +18,11 @@
 <div class="bottom-sheet" class:open>
   <div
     class="scrim"
-    on:click={scrimWillClose ? onClickDismiss : () => {}}
+    on:click={scrimWillClose ? () => (open = false) : () => {}}
     on:scroll={(e) => e.stopPropagation()}
   />
   <div class="content">
-    <ModalHeader {onClickDismiss}>
+    <ModalHeader onClickDismiss={() => (open = false)}>
       <slot name="heading" />{heading}
     </ModalHeader>
     <ScrollShadow>

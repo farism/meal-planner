@@ -13,6 +13,6 @@
   }
 
   :global(.card + .card) {
-    margin-top: 24px;
+    margin-top: 12px;
   }
 </style>

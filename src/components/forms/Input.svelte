@@ -11,6 +11,9 @@
   on:blur
   on:input
   on:change
+  on:keydown
+  on:keyup
+  on:keypress
   bind:value
   bind:this={ref}
   {name}

@@ -43,12 +43,14 @@ export interface Recipe {
   name: string
   cuisine?: string
   cookingTime?: number
-  items: {
-    item: PantryItem
-    quantity?: string
-    unit?: string
-  }[]
+  items: RecipeItem[]
   steps: string[]
+}
+
+export interface RecipeItem {
+  item: PantryItem
+  quantity?: string
+  unit?: string
 }
 
 export type DishType = 'Recipe' | 'PantryItem'

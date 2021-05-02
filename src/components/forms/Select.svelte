@@ -4,25 +4,18 @@
   export let ref: HTMLSelectElement | null = null
 </script>
 
-<select {name} bind:value bind:this={ref} class:hasValue={value !== ''}>
+<select {name} bind:value bind:this={ref} class:hasValue={Boolean(value)}>
   <slot />
 </select>
 
 <style>
   select {
     -webkit-appearance: none;
-    -webkit-text-fill-color: var(--input-placeholder-color);
-    background: white;
-    background-image: linear-gradient(
-        45deg,
-        transparent 50%,
-        var(--border-color) 50%
-      ),
-      linear-gradient(135deg, var(--border-color) 50%, transparent 50%);
-    background-position: calc(100% - 20px) calc(18px),
-      calc(100% - 15px) calc(18px);
-    background-size: 5px 5px, 5px 5px, 1.5em 1.5em;
+    -webkit-text-fill-color: var(--secondary-color);
+    background-color: white;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6' fill='%23bcbcbc'><polygon points='0,0 12,0 6,6'/></svg>");
     background-repeat: no-repeat;
+    background-position: calc(100% - 16px) center;
     border-color: var(--border-color);
     border-radius: 4px;
     border-style: solid;
@@ -44,11 +37,6 @@
 
   select:focus {
     border-color: var(--primary-color-light);
-    background-image: linear-gradient(
-        45deg,
-        transparent 50%,
-        var(--primary-color-light) 50%
-      ),
-      linear-gradient(135deg, var(--primary-color-light) 50%, transparent 50%);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6' fill='%23b6ecb6'><polygon points='0,0 12,0 6,6'/></svg>");
   }
 </style>

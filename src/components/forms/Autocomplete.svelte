@@ -9,7 +9,8 @@
   export let name = ''
   export let docs: Readable<any[]> = readable([], () => {})
   export let ref: Input | null = null
-  export let getValue = (item: any) => item.name
+  export let getValue = (item: any) => item.name!
+  export let checkValid = (value: string) => Promise.resolve(true)
 
   let open = false
 
@@ -22,31 +23,30 @@
     () => {}
   )
 
+  $: console.log($filtered)
+
   function show() {
     open = true
   }
 
   function hide() {
+    value = value.trim()
     open = false
     flip = false
+
+    if (value !== '') {
+      checkValid(value).then((isValid) => {
+        if (!isValid) {
+          value = ''
+        }
+      })
+    }
   }
 
   function onClick(e: MouseEvent) {
     ;(e.target as HTMLInputElement).select()
 
     show()
-  }
-
-  function validate() {
-    const valid = get(docs)
-      .map(getValue)
-      .some((val) => val === value)
-
-    if (!valid) {
-      value = ''
-    }
-
-    setTimeout(hide, 100)
   }
 
   function onSelect(item: any) {
@@ -66,7 +66,6 @@
   <Input
     on:input={show}
     on:click={onClick}
-    on:blur={validate}
     bind:this={ref}
     bind:value
     {name}
@@ -105,9 +104,11 @@
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
     max-height: 156px;
     overflow-y: scroll;
+    overscroll-behavior: container;
     position: absolute;
     width: 100%;
     z-index: 20;
+    outline: #f00;
   }
 
   .menu.flip {
