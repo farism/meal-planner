@@ -2,8 +2,8 @@
   import dayjs from 'dayjs'
   import ChevronLeftIcon from 'svelte-feather-icons/src/icons/ChevronLeftIcon.svelte'
   import ChevronRightIcon from 'svelte-feather-icons/src/icons/ChevronRightIcon.svelte'
+  import PlusIcon from 'svelte-feather-icons/src/icons/PlusIcon.svelte'
   import type { NavigateFn } from 'svelte-navigator'
-
   import { derived, get, readable } from 'svelte/store'
   import Button from '../components/buttons/Button.svelte'
   import FabRemove from '../components/buttons/FABRemove.svelte'
@@ -179,16 +179,23 @@
   <div class="upcoming-list">
     {#each $upcomingDates as d}
       <Card>
-        <div class="month-year" on:click={() => onClickDate(d.date)}>
-          {d.date.format('MMMM DD')}
+        <div class="upcoming-item" on:click={() => onClickDate(d.date)}>
+          <PlusIcon size="24" />
+          <div class="upcoming-label">
+            {d.date.format('MMMM D')}
+          </div>
         </div>
-        <DishList
-          docs={d.dishes}
-          onClick={onClickDish}
-          onRemove={onRemoveDish}
-          removing={isRemoving}
-          emptyMessage=""
-        />
+        {#if get(d.dishes).length > 0}
+          <div class="upcoming-list-wrapper">
+            <DishList
+              docs={d.dishes}
+              onClick={onClickDish}
+              onRemove={onRemoveDish}
+              removing={isRemoving && !showBottomSheet}
+              emptyMessage=""
+            />
+          </div>
+        {/if}
       </Card>
     {/each}
   </div>
@@ -223,7 +230,7 @@
       <ChevronLeftIcon />
     </Button>
     <span class="month-year">
-      {activeDate.format('MMMM DD')}
+      {activeDate.format('MMMM D')}
     </span>
     <Button secondary on:click={nextDay}>
       <ChevronRightIcon />
@@ -317,6 +324,21 @@
 
   .upcoming-list {
     padding: 30px;
+  }
+
+  .upcoming-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .upcoming-label {
+    flex: 1 1 auto;
+    margin-left: 12px;
+    font-size: 24px;
+  }
+
+  .upcoming-list-wrapper {
+    margin-top: 12px;
   }
 
   .calendar-controls {

@@ -5,11 +5,17 @@
   import Input from './Input.svelte'
 
   export let placeholder = ''
+
   export let value = ''
+
   export let name = ''
+
   export let docs: Readable<any[]> = readable([], () => {})
+
   export let ref: Input | null = null
+
   export let getValue = (item: any) => item.name!
+
   export let checkValid = (value: string) => Promise.resolve(true)
 
   let open = false
@@ -22,8 +28,6 @@
     ),
     () => {}
   )
-
-  $: console.log($filtered)
 
   function show() {
     open = true
@@ -66,6 +70,8 @@
   <Input
     on:input={show}
     on:click={onClick}
+    on:focus
+    on:blur
     bind:this={ref}
     bind:value
     {name}

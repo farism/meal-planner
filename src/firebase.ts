@@ -6,7 +6,7 @@ import 'firebase/firestore'
 import 'firebase/functions'
 import { omit, uniqBy } from 'lodash-es'
 import { onDestroy } from 'svelte'
-import { derived, get, Writable, writable } from 'svelte/store'
+import { derived, get, readable, Writable, writable } from 'svelte/store'
 import { pantry } from './pantry'
 import type {
   Dish,
@@ -15,6 +15,8 @@ import type {
   Recipe,
   Settings,
   SharedPermission,
+  ShoppingItem,
+  ShoppingList,
 } from './types'
 
 type DocumentSnapshot = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
@@ -184,21 +186,27 @@ function mapDocData<T>(ref: DocumentSnapshot) {
 
 export function getDocs<T>(
   collection: string,
-  field: string = 'uid'
+  field: string = 'uid',
+  where: [string, firebase.firestore.WhereFilterOp, any][] = []
 ): Writable<T[]> {
   const docs = writable<T[]>([])
 
   loading.update((state) => ({ ...state, [collection]: true }))
 
   if (uid()) {
-    const unsubscribe = db
-      .collection(collection)
-      .where(field, '==', uid())
-      .onSnapshot((ref) => {
-        docs.set(mapQueryData(ref))
+    const ref = db.collection(collection)
 
-        loading.update((state) => ({ ...state, [collection]: false }))
-      })
+    let query = ref.where(field, '==', uid())
+
+    where.forEach((w) => {
+      query = query.where(...w)
+    })
+
+    const unsubscribe = query.onSnapshot((ref) => {
+      docs.set(mapQueryData(ref))
+
+      loading.update((state) => ({ ...state, [collection]: false }))
+    })
 
     onDestroy(unsubscribe)
   }
@@ -375,41 +383,18 @@ export function removeRecipe(recipe: Recipe) {
   }
 }
 
-export function getDishes(start: Date, end: Date) {
-  const docs = writable<Dish[]>([])
-
-  loading.update((state) => ({ ...state, dishes: true }))
-
-  if (uid()) {
-    const unsubscribe = db
-      .collection('dishes')
-      .where('uid', '==', uid())
-      .where('date', '>=', start)
-      .where('date', '<=', end)
-      .onSnapshot((ref) => {
-        docs.set(mapQueryData(ref))
-
-        loading.update((state) => ({ ...state, dishes: false }))
-      })
-
-    onDestroy(unsubscribe)
-  }
-
-  return docs
-}
-
 export function getCalendarDishes(dateStr: string) {
-  return getDishes(
-    dayjs(dateStr).startOf('month').toDate(),
-    dayjs(dateStr).endOf('month').toDate()
-  )
+  return getDocs<Dish>('dishes', 'uid', [
+    ['date', '>=', dayjs(dateStr).startOf('month').toDate()],
+    ['date', '<=', dayjs(dateStr).endOf('month').toDate()],
+  ])
 }
 
 export function getUpcomingDishes() {
-  return getDishes(
-    dayjs().startOf('day').toDate(),
-    dayjs().add(7, 'days').toDate()
-  )
+  return getDocs<Dish>('dishes', 'uid', [
+    ['date', '>=', dayjs().startOf('day').toDate()],
+    ['date', '<=', dayjs().add(7, 'days').toDate()],
+  ])
 }
 
 export function saveDish(dish: Dish) {
@@ -423,5 +408,43 @@ export function saveDish(dish: Dish) {
 export function removeDish(dish: Dish) {
   if (dish.id !== null) {
     removeDoc('dishes', dish.id)
+  }
+}
+
+export function saveShoppingList(item: ShoppingList) {
+  if (item.id === null) {
+    return addDoc<ShoppingList>('shopping_lists', item)
+  } else {
+    return updateDoc<ShoppingList>('shopping_lists', item)
+  }
+}
+
+export function removeShoppingList(item: ShoppingList) {
+  if (item.id !== null) {
+    removeDoc('shopping_lists', item.id)
+  }
+}
+
+export function getShoppingItems(list: ShoppingList | null) {
+  if (list) {
+    return getDocs<ShoppingItem>('shopping_items', 'uid', [
+      ['listId', '==', list.id],
+    ])
+  } else {
+    return readable<ShoppingItem[]>([], () => {})
+  }
+}
+
+export function saveShoppingItem(item: ShoppingItem) {
+  if (item.id === null) {
+    return addDoc<ShoppingItem>('shopping_items', item)
+  } else {
+    return updateDoc<ShoppingItem>('shopping_items', item)
+  }
+}
+
+export function removeShoppingItem(item: ShoppingItem) {
+  if (item.id !== null) {
+    removeDoc('shopping_items', item.id)
   }
 }

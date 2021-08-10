@@ -21,12 +21,12 @@
     padding: 30px;
   }
 
-  .header h2 {
+  h2 {
     flex: 1 1 auto;
     margin: 0;
   }
 
-  .header .dismiss {
+  .dismiss {
     align-items: center;
     background: none;
     border: none;

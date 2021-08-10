@@ -4,7 +4,7 @@
 
   export let visible = false
 
-  export let shrink = true
+  export let shrink = false
 
   function hide() {
     visible = false

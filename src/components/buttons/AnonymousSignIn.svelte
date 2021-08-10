@@ -25,6 +25,10 @@
     width: 100%;
   }
 
+  button:active {
+    background: var(--secondary-color-light);
+  }
+
   button :global(svg) {
     height: 32px;
     margin-right: 16px;

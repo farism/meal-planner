@@ -14,7 +14,7 @@
   <NavigationLink to="/" label="Meals">
     <Calendar strokeWidth={1.5} size="18" />
   </NavigationLink>
-  <NavigationLink to="/shopping" label="Shopping">
+  <NavigationLink to="/shopping-lists" label="Shopping">
     <ShoppingCart strokeWidth={1.5} size="18" />
   </NavigationLink>
   <NavigationLink to="/recipes" label="Recipes">

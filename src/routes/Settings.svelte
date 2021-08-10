@@ -33,9 +33,7 @@
   }
 </script>
 
-<Header>
-  <div>Settings</div>
-</Header>
+<Header heading="Settings" />
 
 <div id="settings">
   <div class="body">
@@ -57,7 +55,7 @@
           </div>
         {/if}
         {#if $user.displayName}
-          <div class="name">
+          <div class="display-name">
             {$user.displayName}
           </div>
         {/if}
@@ -112,15 +110,18 @@
             {/if}
           </div>
         </Card>
-        <div class="buttons">
-          <Button warning on:click={logout}>Sign Out</Button>
-          {#if isAnonymous}
-            <div class="anonymous warning">
-              Warning! You are currently using an anonymous account. If you sign
-              out you will not be able to access your data.
-            </div>
-          {/if}
-        </div>
+        <Card>
+          <h5>Session</h5>
+          <div class="buttons">
+            <Button warning on:click={logout}>Sign Out</Button>
+            {#if isAnonymous}
+              <div class="anonymous warning">
+                Warning! You are currently using an anonymous account. If you
+                sign out you will not be able to access your data.
+              </div>
+            {/if}
+          </div>
+        </Card>
       </div>
     {/if}
   </div>
@@ -129,6 +130,10 @@
 <style>
   .body {
     padding: 30px;
+  }
+
+  h5 {
+    margin: 0 0 24px 0;
   }
 
   .user {
@@ -159,6 +164,10 @@
     text-align: center;
   }
 
+  .display-name {
+    padding: 24px 0;
+  }
+
   .anonymous {
     color: var(--secondary-color);
     line-height: 24px;
@@ -174,21 +183,12 @@
     margin: 24px 0;
   }
 
-  .name {
-    padding: 24px 0;
-  }
-
-  h5 {
-    margin: 0;
-  }
-
   #settings :global(.card label) {
     margin-top: 24px;
     width: 100%;
   }
 
   .buttons {
-    margin-top: 24px;
     width: 100%;
   }
 

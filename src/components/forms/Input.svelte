@@ -2,6 +2,7 @@
   export let placeholder = ''
   export let value = ''
   export let name = ''
+  export let inputmode = 'text'
   export let ref: HTMLInputElement | null = null
 </script>
 
@@ -16,6 +17,7 @@
   on:keypress
   bind:value
   bind:this={ref}
+  {inputmode}
   {name}
   {placeholder}
 />

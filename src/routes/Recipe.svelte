@@ -10,8 +10,6 @@
 
   export let navigate: NavigateFn
 
-  export let fullview: boolean = true
-
   export let id: string | null = null
 
   $: recipe = getDoc<Recipe>('recipes', id)
@@ -21,21 +19,30 @@
       navigate(`/recipes/${$recipe.id}/edit`)
     }
   }
+
+  function fontSize(str: string) {
+    if (str.length < 15) {
+      return 'lg'
+    } else if (str.length < 25) {
+      return 'md'
+    } else {
+      return 'sm'
+    }
+  }
 </script>
 
 {#if $recipe}
-  {#if fullview}
-    <Header>
-      <div>{$recipe.name}</div>
-    </Header>
-  {/if}
+  <div class="header {fontSize($recipe.name)}">
+    <Header heading={$recipe.name} dynamicSize />
+  </div>
 
   <div class="body">
-    <h4>Information</h4>
-    <p>Cuisine: {$recipe.cuisine}</p>
-    <p>Cooking Time: {$recipe.cookingTime} minutes</p>
+    <h4>Cuisine</h4>
+    <p>{$recipe.cuisine}</p>
+    <h4>Cooking Time</h4>
+    <p>{$recipe.cookingTime} minutes</p>
     <h4>Ingredients</h4>
-    <ul>
+    <ul class="ingredients">
       {#each $recipe.items as ingredient, i}
         <li>
           {ingredient.quantity}
@@ -44,25 +51,43 @@
         </li>
       {/each}
     </ul>
-    <h4>Steps</h4>
-    <ul>
+    <h4>Directions</h4>
+    <ul class="directions">
       {#each $recipe.steps as step, i}
         <li>
-          {step}
+          <div>Step {i + 1}</div>
+          <p>{step}</p>
         </li>
       {/each}
     </ul>
   </div>
 
-  {#if fullview}
-    <FABPanel>
-      <FABEdit on:click={editRecipe} />
-    </FABPanel>
-  {/if}
+  <FABPanel>
+    <FABEdit on:click={editRecipe} />
+  </FABPanel>
 {/if}
 
 <style>
   .body {
     padding: 0 30px 30px 30px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 32px;
+  }
+
+  .header.lg :global(h1) {
+    font-size: 2em;
+  }
+
+  .header.md :global(h1) {
+    font-size: 1.5em;
+  }
+
+  .header.sm :global(h1) {
+    font-size: 1em;
   }
 </style>

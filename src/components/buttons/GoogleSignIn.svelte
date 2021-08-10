@@ -34,6 +34,10 @@
     width: 100%;
   }
 
+  button:active {
+    background: var(--secondary-color-light);
+  }
+
   svg {
     height: 32px;
     margin-right: 32px;

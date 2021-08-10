@@ -42,7 +42,7 @@ export interface Recipe {
   uid: string | null
   name: string
   cuisine?: string
-  cookingTime?: number
+  cookingTime?: string
   items: RecipeItem[]
   steps: string[]
 }
@@ -67,9 +67,16 @@ export interface Dish {
   type: DishType
 }
 
+export interface ShoppingList {
+  id: string | null
+  uid: string | null
+  name: string
+}
+
 export interface ShoppingItem {
   id: string | null
   uid: string | null
+  listId: string
   name: string
   usedBy: Dish
 }

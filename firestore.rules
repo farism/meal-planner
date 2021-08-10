@@ -49,17 +49,26 @@ service cloud.firestore {
     }
 
     match /recipes/{document=**} {
-    	allow read, update, delete: if isOwner();
+    	allow read: if canRead();
+    	allow update, delete: if canWrite();
       allow create: if isAuthor()
     }
 
     match /shopping_lists/{document=**} {
-    	allow read, update, delete: if isOwner();
+    	allow read: if canRead();
+    	allow update, delete: if canWrite();
+      allow create: if isAuthor()
+    }
+    
+    match /shopping_items/{document=**} {
+    	allow read: if canRead();
+    	allow update, delete: if canWrite();
       allow create: if isAuthor()
     }
     
     match /dishes/{document=**} {
-    	allow read, update, delete: if isOwner();
+    	allow read: if canRead();
+    	allow update, delete: if canWrite();
       allow create: if isAuthor()
     }
   }

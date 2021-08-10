@@ -12,7 +12,8 @@
   import Recipes from './routes/Recipes.svelte'
   import Settings from './routes/Settings.svelte'
   import SettingsShare from './routes/SettingsShare.svelte'
-  import Shopping from './routes/Shopping.svelte'
+  import ShoppingList from './routes/ShoppingList.svelte'
+  import ShoppingLists from './routes/ShoppingLists.svelte'
 
   $: showAuthError = $authError !== ''
 
@@ -35,7 +36,8 @@
   {#if $user}
     <Layout>
       <Route component={Meals} />
-      <Route path="shopping" component={Shopping} />
+      <Route path="shopping-lists" component={ShoppingLists} />
+      <Route path="shopping-list/:id" component={ShoppingList} />
       <Route path="recipes" component={Recipes} />
       <Route path="recipes/:id" component={Recipe} />
       <Route path="recipes/:id/edit" component={RecipeEdit} />

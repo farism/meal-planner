@@ -1,6 +1,4 @@
 <script lang="ts">
-  import BottomSheet from '../components/layouts/BottomSheet.svelte'
-
   import type { NavigateFn } from 'svelte-navigator'
   import { get, writable } from 'svelte/store'
   import { fade } from 'svelte/transition'
@@ -11,9 +9,9 @@
   import Input from '../components/forms/Input.svelte'
   import Select from '../components/forms/Select.svelte'
   import TextArea from '../components/forms/TextArea.svelte'
+  import CreatePantryItem from '../components/layouts/CreatePantryItem.svelte'
   import Header from '../components/layouts/Header.svelte'
-  import Modal from '../components/layouts/Modal.svelte'
-  import { getDoc, getDocs, saveRecipe, savePantryItem } from '../firebase'
+  import { getDoc, getDocs, saveRecipe } from '../firebase'
   import type { PantryItem, Recipe, RecipeItem } from '../types'
 
   export let location: string = ''
@@ -34,35 +32,39 @@
     uid: null,
     name: '',
     cuisine: '',
-    cookingTime: 0,
+    cookingTime: '',
     items: [],
     steps: [],
   }
 
-  const defaultRecipeItem: RecipeItem = {
-    item: defaultPantryItem,
-    quantity: '',
-    unit: '',
+  function defaultRecipeItem(): RecipeItem {
+    return {
+      item: { ...defaultPantryItem },
+      quantity: '',
+      unit: '',
+    }
   }
 
   let nameRef: HTMLInputElement
 
   let errors: string[] = []
 
-  let newPantryItemErrors: string[] = []
-
-  let newPantryItemName = ''
-
   let showBottomSheet = false
+
+  let activeRecipeItemIndex = -1
 
   $: recipe =
     id === null ? writable(defaultRecipe) : getDoc<Recipe>('recipes', id)
 
   $: pantry = getDocs<PantryItem>('pantry')
 
+  $: activeRecipeItem = $recipe?.items.find(
+    (item, i) => i === activeRecipeItemIndex
+  )
+
   function addItem() {
     if ($recipe) {
-      $recipe.items = [...$recipe.items, defaultRecipeItem]
+      $recipe.items = [...$recipe.items, defaultRecipeItem()]
     }
   }
 
@@ -104,34 +106,34 @@
     }
   }
 
-  function saveItem() {
-    if (newPantryItemName.trim() === '') {
-      newPantryItemErrors = ['* name required']
-    } else {
-      savePantryItem({ ...defaultPantryItem, name: newPantryItemName })
-      showBottomSheet = false
-      newPantryItemName = ''
-    }
-  }
-
   function checkValid(value: string) {
     return new Promise<boolean>((resolve, reject) => {
       const isInPantry = get(pantry).some((item) => item.name === value)
 
       if (!isInPantry) {
-        newPantryItemName = value
-
         showBottomSheet = true
       }
     })
+  }
+
+  function resetPantryItem() {
+    const r = get(recipe)
+
+    if (r) {
+      r.items = r.items.map((item, i) =>
+        i === activeRecipeItemIndex
+          ? { ...item, item: { ...defaultPantryItem } }
+          : item
+      )
+
+      recipe.set(r)
+    }
   }
 </script>
 
 {#if $recipe}
   <div class="content">
-    <Header>
-      <div>{$recipe.id ? 'Editing Recipe' : 'New Recipe'}</div>
-    </Header>
+    <Header heading={$recipe.id ? 'Editing Recipe' : 'New Recipe'} />
     <div class="body">
       <h4>Information</h4>
       <div class="recipe-info">
@@ -140,12 +142,18 @@
           bind:ref={nameRef}
           bind:value={$recipe.name}
         />
-        <Select>
+        <Select bind:value={$recipe.cuisine}>
           <option>cuisine</option>
-          <option value="italian">Italian</option>
-          <option value="mexican">Mexican</option>
+          <option value="American">American</option>
+          <option value="Chinese">Chinese</option>
+          <option value="French">French</option>
+          <option value="Indian">Indian</option>
+          <option value="Italian">Italian</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Mediterranean">Mediterranean</option>
+          <option value="Mexican">Mexican</option>
         </Select>
-        <Select>
+        <Select bind:value={$recipe.cookingTime}>
           <option value="">cooking time</option>
           <option value="15">15</option>
           <option value="30">30</option>
@@ -157,23 +165,24 @@
         </Select>
         <h4>Ingredients</h4>
       </div>
-      {#each $recipe.items as ingredient, i (i)}
-        <div class="ingredient" in:fade|local out:fade|local>
-          <div class="ingredient-info">
+      {#each $recipe.items as item, i (i)}
+        <div class="item" in:fade|local out:fade|local>
+          <div class="item-info">
             <div class="name">
               <Autocomplete
+                bind:value={item.item.name}
+                on:focus={() => (activeRecipeItemIndex = i)}
                 placeholder="name"
                 docs={pantry}
-                bind:value={ingredient.item.name}
                 {checkValid}
               />
             </div>
             <div class="serving">
-              <div class="qty">
-                <Input placeholder="qty" bind:value={ingredient.quantity} />
+              <div class="quantity">
+                <Input placeholder="qty" bind:value={item.quantity} />
               </div>
               <div class="unit">
-                <Select bind:value={ingredient.unit}>
+                <Select bind:value={item.unit}>
                   <option value="">unit</option>
                   <option value="tsp">tsp</option>
                   <option value="tsbp">tsbp</option>
@@ -221,30 +230,20 @@
   </div>
 {/if}
 
-<BottomSheet heading="Add Pantry Item" bind:open={showBottomSheet}>
-  <div class="bottom-sheet">
-    {#if newPantryItemErrors.length > 0}
-      <Errors errors={newPantryItemErrors} />
-    {/if}
-    <Input name="name" placeholder="name *" bind:value={newPantryItemName} />
-    <Select name="category">
-      <option>category</option>
-      <option value="deli">Deli</option>
-    </Select>
-    <div class="save-button">
-      <Button on:click={saveItem}>Add Pantry Item</Button>
-    </div>
-  </div>
-</BottomSheet>
+{#if activeRecipeItem}
+  <CreatePantryItem
+    bind:open={showBottomSheet}
+    activeItem={activeRecipeItem.item}
+    heading="Add Pantry Item"
+    button="Add Pantry Item"
+    onDismiss={resetPantryItem}
+  />
+{/if}
 
 <style>
   :global(body.bottomsheet-open) .content {
     filter: blur(2px);
     transform: translateY(-50px);
-  }
-
-  .bottom-sheet :global(input) {
-    margin-bottom: 24px;
   }
 
   .content {
@@ -271,13 +270,13 @@
     margin-bottom: 16px;
   }
 
-  .ingredient {
+  .item {
     display: flex;
     align-items: center;
     margin-bottom: 16px;
   }
 
-  .ingredient-info {
+  .item-info {
     flex: 1 1 auto;
   }
 
@@ -286,7 +285,7 @@
     margin-top: 8px;
   }
 
-  .qty {
+  .quantity {
     margin-right: 4px;
     flex: 1 1 50%;
   }
