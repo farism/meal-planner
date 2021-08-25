@@ -46,13 +46,4 @@
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/meal-planner/service-worker.js')
-        .then(function () {
-          console.log('Service Worker Registered')
-        })
-    }
-  </script>
 </html>
