@@ -2,7 +2,7 @@ self.addEventListener('install', function (e) {
   // @ts-ignore
   e.waitUntil(
     caches.open('mealplanner').then(function (cache) {
-      return cache.addAll(['/', '/meal-planner/index.html'])
+      return cache.addAll(['/meal-planner/index.html'])
     })
   )
 })
