@@ -40,7 +40,7 @@
   })
 </script>
 
-<Router primary={false}>
+<Router primary={false} basepath="/meal-planner/">
   {#if $user}
     <Layout>
       <Route component={Meals} />

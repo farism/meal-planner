@@ -6,7 +6,8 @@ import 'firebase/firestore'
 import 'firebase/functions'
 import { omit, uniqBy } from 'lodash-es'
 import { onDestroy } from 'svelte'
-import { derived, get, readable, Writable, writable } from 'svelte/store'
+import type { Writable } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 import { pantry } from './pantry'
 import type {
   Dish,
@@ -15,7 +16,6 @@ import type {
   Recipe,
   Settings,
   SharedPermission,
-  ShoppingItem,
   ShoppingList,
 } from './types'
 
@@ -42,6 +42,7 @@ const defaultSettings: Settings = {
   showLunch: true,
   showDinner: true,
   activePermission: null,
+  hideCompleted: false,
 }
 
 !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
