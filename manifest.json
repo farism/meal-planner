@@ -3,7 +3,7 @@
   "background_color": "#f5f5f5",
   "display": "standalone",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "https://farism.github.io/meal-planner/",
   "name": "meal planner",
   "short_name": "meal planner",
   "description": "Plan your meals",
