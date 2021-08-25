@@ -31,7 +31,7 @@
     border-style: solid;
     border-width: var(--input-border-width);
     box-sizing: border-box;
-    color: var(--body-color);
+    color: rgb(51, 51, 51);
     display: flex;
     font-size: var(--input-font-size);
     height: var(--input-height);

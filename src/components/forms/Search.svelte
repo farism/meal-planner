@@ -25,8 +25,8 @@
 
   input {
     -webkit-appearance: none;
-    background: white;
-    border-color: var(--border-color);
+    background: var(--secondary-color-light2);
+    border-color: var(--header-border-color);
     border-style: solid;
     border-width: 1px;
     border-left: none;
@@ -44,8 +44,8 @@
   }
 
   input:focus {
-    border-color: var(--primary-color-light);
-    box-shadow: 0 0 1px rgba();
+    border-color: var(--primary-color);
+    box-shadow: 0 0 1px var(--primary-color);
   }
 
   input::placeholder {
@@ -55,6 +55,7 @@
   .icon {
     margin-top: -8px;
     position: absolute;
+    color: var(--body-color);
     right: 16px;
     top: 50%;
     transition: 0.2s all ease-out;

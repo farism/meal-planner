@@ -10,7 +10,7 @@
 
   export let emptyMessage = 'No items to display'
 
-  export let keyField = 'id'
+  export let getKey = (item: any) => item.id
 
   export let getName = (item: any) => item.name
 
@@ -25,7 +25,7 @@
   {#if $docs}
     {#if $docs.length > 0}
       <ul class="list" class:removing>
-        {#each $docs as item (item[keyField])}
+        {#each $docs as item (getKey(item))}
           <li class="item" out:fade|local={{ duration: removing ? 200 : 0 }}>
             <RemoveButton class="item-remove" on:click={() => onRemove(item)} />
             <div class="item-name" on:click={() => !removing && onClick(item)}>
@@ -66,6 +66,7 @@
     align-items: center;
     display: flex;
     height: 48px;
+    overflow: hidden;
     padding: 0 30px;
     position: relative;
     transition: 0.2s transform ease-out;

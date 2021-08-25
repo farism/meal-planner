@@ -14,6 +14,8 @@
 
   $: recipe = getDoc<Recipe>('recipes', id)
 
+  $: console.log($recipe)
+
   function editRecipe() {
     if ($recipe) {
       navigate(`/recipes/${$recipe.id}/edit`)
@@ -45,9 +47,9 @@
     <ul class="ingredients">
       {#each $recipe.items as ingredient, i}
         <li>
+          {ingredient.item.name} -
           {ingredient.quantity}
-          {ingredient.unit}
-          {ingredient.item.name}
+          {ingredient.unit}{#if ingredient.unit}(s){/if}
         </li>
       {/each}
     </ul>

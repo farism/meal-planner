@@ -106,7 +106,7 @@
   }
 
   .menu {
-    background: white;
+    background: var(--card-color);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
     max-height: 156px;
     overflow-y: scroll;

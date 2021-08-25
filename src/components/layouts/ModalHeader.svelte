@@ -30,6 +30,7 @@
     align-items: center;
     background: none;
     border: none;
+    color: var(--body-color);
     display: flex;
     flex: 0 0 auto;
     height: 32px;

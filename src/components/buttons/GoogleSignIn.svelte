@@ -24,7 +24,7 @@
 <style>
   button {
     align-items: center;
-    background-color: white;
+    background-color: var(--background-color);
     border: 0;
     border-radius: 2px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
@@ -36,6 +36,10 @@
 
   button:active {
     background: var(--secondary-color-light);
+  }
+
+  :global(body.dark-mode) button {
+    border: 1px solid var(--body-color);
   }
 
   svg {

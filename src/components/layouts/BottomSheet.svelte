@@ -78,7 +78,7 @@
   }
 
   .content {
-    background: rgb(245, 245, 245);
+    background: var(--bottomsheet-background-color);
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
     box-sizing: border-box;

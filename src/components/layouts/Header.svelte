@@ -28,7 +28,7 @@
 
 <style>
   .header {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--header-border-color);
     box-sizing: border-box;
     padding: 12px 24px;
     position: relative;

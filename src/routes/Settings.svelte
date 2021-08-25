@@ -16,6 +16,13 @@
 
   $: isAnonymous = $user && !$user.email
 
+  function onChangeDarkMode(e: Event) {
+    settings.update((s) => ({
+      ...s,
+      darkMode: !s.darkMode,
+    }))
+  }
+
   function onChangeEnabledMealTime(time: keyof Settings) {
     return function (e: Event) {
       settings.update((s) => ({
@@ -29,6 +36,13 @@
     settings.update((s) => ({
       ...s,
       mealView: parseInt((e.target as HTMLInputElement).value as any, 10),
+    }))
+  }
+
+  function onChangeHideCompleted(e: Event) {
+    settings.update((s) => ({
+      ...s,
+      hideCompleted: !s.hideCompleted,
     }))
   }
 </script>
@@ -59,6 +73,12 @@
             {$user.displayName}
           </div>
         {/if}
+        <Card>
+          <h5>Dark Mode</h5>
+          <Checkbox checked={$settings?.darkMode} on:change={onChangeDarkMode}>
+            Enable Dark Mode
+          </Checkbox>
+        </Card>
         <Card>
           <h5>Default Meal View</h5>
           <RadioButton
@@ -95,6 +115,15 @@
             on:change={onChangeEnabledMealTime('showDinner')}
           >
             Show Dinner
+          </Checkbox>
+        </Card>
+        <Card>
+          <h5>Shopping</h5>
+          <Checkbox
+            checked={$settings?.hideCompleted}
+            on:change={onChangeHideCompleted}
+          >
+            Hide Completed
           </Checkbox>
         </Card>
         <Card>

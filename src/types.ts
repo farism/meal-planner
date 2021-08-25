@@ -9,10 +9,12 @@ export interface SharedPermission {
 
 export interface Settings {
   activePermission: SharedPermission | null
+  darkMode: boolean
   mealView: number
   showBreakfast: boolean
   showLunch: boolean
   showDinner: boolean
+  hideCompleted: boolean
 }
 
 export type Permission = {
@@ -71,12 +73,8 @@ export interface ShoppingList {
   id: string | null
   uid: string | null
   name: string
+  items: Array<ShoppingItem>
 }
-
-export interface ShoppingItem {
-  id: string | null
-  uid: string | null
-  listId: string
-  name: string
-  usedBy: Dish
+export interface ShoppingItem extends RecipeItem {
+  completed: boolean
 }

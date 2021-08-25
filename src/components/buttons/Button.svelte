@@ -14,7 +14,7 @@
   button {
     -webkit-touch-callout: none; /* iOS Safari */
     align-items: center;
-    background: white;
+    background-color: transparent;
     border-radius: 4px;
     border-style: solid;
     border-width: 2px;

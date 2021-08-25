@@ -22,7 +22,7 @@
 
 <style>
   .config {
-    background: white;
+    background: var(--card-color);
     border-radius: 4px;
     bottom: 100%;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);

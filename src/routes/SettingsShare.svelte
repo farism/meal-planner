@@ -102,7 +102,7 @@
     <List
       docs={permissions}
       emptyMessage={''}
-      keyField="email"
+      getKey={(item) => item.email}
       getName={(item) => item.email}
       removing={isRemoving}
       onRemove={removePermission}
@@ -112,7 +112,7 @@
     <List
       docs={sharedPermissions}
       emptyMessage={''}
-      keyField="email"
+      getKey={(item) => item.email}
       getName={(item) => item.email}
       onClick={setActive}
     />

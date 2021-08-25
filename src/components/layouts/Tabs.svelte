@@ -31,6 +31,7 @@
     border: 0;
     border-bottom: 2px solid transparent;
     border-radius: 0;
+    color: var(--body-color);
     flex: 1 1 auto;
     font-size: 18px;
     margin: 0;
@@ -43,7 +44,7 @@
   }
 
   .tabs button.active {
-    background: white;
+    background: var(--secondary-color-light);
     border-bottom-color: var(--primary-color);
   }
 </style>

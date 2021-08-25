@@ -19,9 +19,11 @@ import type {
   ShoppingList,
 } from './types'
 
-type DocumentSnapshot = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
+type DocumentSnapshot =
+  firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
 
-type QuerySnapshot = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
+type QuerySnapshot =
+  firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
 
 const config = {
   apiKey: 'AIzaSyCGXpx3pS3hDfe6AFRCKIiiEpBQD_1p3G0',
@@ -31,6 +33,15 @@ const config = {
   messagingSenderId: '327298908343',
   appId: '1:327298908343:web:ca03b62e559297eed1cd32',
   measurementId: 'G-YFBSFHRCPJ',
+}
+
+const defaultSettings: Settings = {
+  mealView: 0,
+  darkMode: false,
+  showBreakfast: true,
+  showLunch: true,
+  showDinner: true,
+  activePermission: null,
 }
 
 !firebase.apps.length ? firebase.initializeApp(config) : firebase.app()
@@ -146,14 +157,6 @@ function initPantry(u: firebase.User) {
 }
 
 function loadSettings(): Settings {
-  const defaultSettings: Settings = {
-    mealView: 0,
-    showBreakfast: true,
-    showLunch: true,
-    showDinner: true,
-    activePermission: null,
-  }
-
   return (
     JSON.parse(localStorage.getItem('settings') || JSON.stringify(null)) ||
     defaultSettings
@@ -422,29 +425,5 @@ export function saveShoppingList(item: ShoppingList) {
 export function removeShoppingList(item: ShoppingList) {
   if (item.id !== null) {
     removeDoc('shopping_lists', item.id)
-  }
-}
-
-export function getShoppingItems(list: ShoppingList | null) {
-  if (list) {
-    return getDocs<ShoppingItem>('shopping_items', 'uid', [
-      ['listId', '==', list.id],
-    ])
-  } else {
-    return readable<ShoppingItem[]>([], () => {})
-  }
-}
-
-export function saveShoppingItem(item: ShoppingItem) {
-  if (item.id === null) {
-    return addDoc<ShoppingItem>('shopping_items', item)
-  } else {
-    return updateDoc<ShoppingItem>('shopping_items', item)
-  }
-}
-
-export function removeShoppingItem(item: ShoppingItem) {
-  if (item.id !== null) {
-    removeDoc('shopping_items', item.id)
   }
 }

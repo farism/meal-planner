@@ -27,7 +27,7 @@
 <style>
   :global(.navigation-link) {
     align-items: center;
-    color: #222;
+    color: var(--body-color);
     display: inline-flex;
     flex-direction: column;
     flex: 1 1 0;

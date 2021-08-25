@@ -15,7 +15,7 @@
 <style>
   button {
     align-items: center;
-    background: white;
+    background: transparent;
     border: 0;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
     border-radius: 2px;
@@ -29,7 +29,12 @@
     background: var(--secondary-color-light);
   }
 
+  :global(body.dark-mode) button {
+    border: 1px solid var(--body-color);
+  }
+
   button :global(svg) {
+    color: var(--body-color);
     height: 32px;
     margin-right: 16px;
     width: 32px;

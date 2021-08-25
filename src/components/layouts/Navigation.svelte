@@ -31,8 +31,8 @@
 <style>
   nav {
     align-items: center;
-    background: rgb(240, 240, 240);
-    border-top: 1px solid rgba(220, 220, 220);
+    background-color: var(--navigation-background-color);
+    border-top: 1px solid var(--navigation-border-color);
     box-sizing: border-box;
     display: flex;
     height: 100%;

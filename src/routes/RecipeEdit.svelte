@@ -143,7 +143,7 @@
           bind:value={$recipe.name}
         />
         <Select bind:value={$recipe.cuisine}>
-          <option>cuisine</option>
+          <option value="" disabled>cuisine</option>
           <option value="American">American</option>
           <option value="Chinese">Chinese</option>
           <option value="French">French</option>
@@ -154,7 +154,7 @@
           <option value="Mexican">Mexican</option>
         </Select>
         <Select bind:value={$recipe.cookingTime}>
-          <option value="">cooking time</option>
+          <option value="" disabled>cooking time</option>
           <option value="15">15</option>
           <option value="30">30</option>
           <option value="45">45</option>
@@ -183,7 +183,7 @@
               </div>
               <div class="unit">
                 <Select bind:value={item.unit}>
-                  <option value="">unit</option>
+                  <option value="" disabled>unit</option>
                   <option value="tsp">tsp</option>
                   <option value="tsbp">tsbp</option>
                   <option value="fl oz">fl oz</option>
@@ -321,5 +321,9 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 24px;
+  }
+
+  option[value='']:disabled {
+    display: none;
   }
 </style>
