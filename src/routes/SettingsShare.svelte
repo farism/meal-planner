@@ -148,7 +148,7 @@
       {/if}
     {:else}
       <div>
-        <b>{currentPermission.email}</b> has shared their account
+        <b>{currentPermission.email}</b> has shared their account with you
       </div>
       <div class="permissions">
         {#if currentPermission.read}
@@ -201,6 +201,10 @@
   }
 
   .button {
+    margin-top: 24px;
+  }
+
+  .bottom-sheet :global(label) {
     margin-top: 24px;
   }
 </style>

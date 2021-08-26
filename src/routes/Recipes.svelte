@@ -73,7 +73,11 @@
 
 <FABPanel>
   <FABSettings>
-    <ListConfig bind:sort={sortByField} bind:direction={sortDirection} />
+    <ListConfig
+      bind:sort={sortByField}
+      bind:direction={sortDirection}
+      sortFields={{ name: 'Name', cuisine: 'Cuisine' }}
+    />
   </FABSettings>
   {#if $canEdit}
     <FABRemove on:click={onClickRemove} {isRemoving} />

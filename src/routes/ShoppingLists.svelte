@@ -37,6 +37,7 @@
   const defaultShoppingList: ShoppingList = {
     id: null,
     uid: null,
+    date: new Date(),
     name: `${start.format('MM/DD')} - ${end.format('MM/DD')}`,
     items: [],
   }
@@ -53,7 +54,7 @@
 
   let editHeaderLabel = ''
 
-  let sortByField = 'name'
+  let sortByField = 'date'
 
   let sortDirection: 'asc' | 'desc' = 'asc'
 
@@ -74,8 +75,8 @@
 
   $: docs = getDocs<ShoppingList>('shopping_lists')
 
-  $: orderedDocs = derived(docs, ($docs) => {
-    const ordered = orderBy($docs, [sortByField], [sortDirection])
+  $: orderedDocs = derived(docs, (d) => {
+    const ordered = orderBy(d, [sortByField], [sortDirection])
 
     return searchCheck === ''
       ? ordered
@@ -152,8 +153,12 @@
     if (activeList.name.trim() === '') {
       errors = ['* name required']
     } else {
-      activeList.items = selectedItems
-      saveShoppingList(activeList)
+      saveShoppingList({
+        ...activeList,
+        items: selectedItems,
+        date: new Date(),
+      })
+
       resetBottomSheet()
     }
   }
@@ -178,7 +183,11 @@
 
 <FABPanel>
   <FABSettings>
-    <ListConfig bind:sort={sortByField} bind:direction={sortDirection} />
+    <ListConfig
+      bind:sort={sortByField}
+      bind:direction={sortDirection}
+      sortFields={{ date: 'Date', name: 'Name' }}
+    />
   </FABSettings>
   {#if $canEdit}
     <FABRemove on:click={onClickRemove} {isRemoving} />

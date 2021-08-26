@@ -20,26 +20,30 @@
 
   export let id: string | null = null
 
-  const defaultPantryItem: PantryItem = {
-    id: null,
-    uid: null,
-    name: '',
-    category: '',
+  function defaultPantryItem(): PantryItem {
+    return {
+      id: null,
+      uid: null,
+      name: '',
+      category: '',
+    }
   }
 
-  const defaultRecipe: Recipe = {
-    id: null,
-    uid: null,
-    name: '',
-    cuisine: '',
-    cookingTime: '',
-    items: [],
-    steps: [],
+  function defaultRecipe(): Recipe {
+    return {
+      id: null,
+      uid: null,
+      name: '',
+      cuisine: '',
+      cookingTime: '',
+      items: [defaultRecipeItem()],
+      steps: [''],
+    }
   }
 
   function defaultRecipeItem(): RecipeItem {
     return {
-      item: { ...defaultPantryItem },
+      item: defaultPantryItem(),
       quantity: '',
       unit: '',
     }
@@ -54,7 +58,7 @@
   let activeRecipeItemIndex = -1
 
   $: recipe =
-    id === null ? writable(defaultRecipe) : getDoc<Recipe>('recipes', id)
+    id === null ? writable(defaultRecipe()) : getDoc<Recipe>('recipes', id)
 
   $: pantry = getDocs<PantryItem>('pantry')
 
@@ -122,7 +126,7 @@
     if (r) {
       r.items = r.items.map((item, i) =>
         i === activeRecipeItemIndex
-          ? { ...item, item: { ...defaultPantryItem } }
+          ? { ...item, item: defaultPantryItem() }
           : item
       )
 

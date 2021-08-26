@@ -25,7 +25,7 @@
 
 <style>
   .scrim {
-    background: rgba(0, 0, 0, 0.5);
+    background-color: var(--scrim-background-color);
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
     height: 100%;
     left: 0;
@@ -36,7 +36,7 @@
   }
 
   .modal {
-    background: white;
+    background: var(--background-color);
     border-radius: 8px;
     box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
     display: flex;

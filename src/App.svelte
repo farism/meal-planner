@@ -3,9 +3,11 @@
   import { Route, Router } from 'svelte-navigator'
   import AuthError from './components/layouts/AuthError.svelte'
   import Layout from './components/layouts/Layout.svelte'
-  import { authError, settings, user } from './firebase'
+  import ReloadPrompt from './components/layouts/ReloadPrompt.svelte'
+  import { settings, user } from './firebase'
   import Login from './routes/Login.svelte'
   import Meals from './routes/Meals.svelte'
+  import PageNotFound from './routes/PageNotFound.svelte'
   import Pantry from './routes/Pantry.svelte'
   import Recipe from './routes/Recipe.svelte'
   import RecipeEdit from './routes/RecipeEdit.svelte'
@@ -14,8 +16,6 @@
   import SettingsShare from './routes/SettingsShare.svelte'
   import ShoppingList from './routes/ShoppingList.svelte'
   import ShoppingLists from './routes/ShoppingLists.svelte'
-
-  $: showAuthError = $authError !== ''
 
   onMount(() => {
     document.addEventListener(
@@ -40,10 +40,10 @@
   })
 </script>
 
-<Router primary={false} basepath="/meal-planner/">
+<Router primary={false}>
   {#if $user}
     <Layout>
-      <Route component={Meals} />
+      <Route path="/" component={Meals} />
       <Route path="shopping-lists" component={ShoppingLists} />
       <Route path="shopping-lists/:id" component={ShoppingList} />
       <Route path="recipes" component={Recipes} />
@@ -53,6 +53,7 @@
       <Route path="pantry" component={Pantry} />
       <Route path="settings" component={Settings} />
       <Route path="settings/share" component={SettingsShare} />
+      <Route component={PageNotFound} />
     </Layout>
   {:else}
     <Route component={Login} />
@@ -60,6 +61,8 @@
 </Router>
 
 <AuthError />
+
+<ReloadPrompt />
 
 <style>
   :global(body) {
@@ -83,6 +86,7 @@
     --primary-color-light: rgb(182, 236, 182);
     --primary-color-light2: rgb(211, 243, 211);
     --primary-color: rgb(76, 214, 76);
+    --scrim-background-color: rgba(0, 0, 0, 0.5);
     --secondary-color-light: rgb(231, 231, 231);
     --secondary-color-light2: rgb(245, 245, 245);
     --secondary-color: rgb(170, 170, 170);
@@ -103,6 +107,7 @@
     --navigation-background-color: rgb(35, 35, 35);
     --navigation-border-color: rgb(25, 25, 25);
     --primary-color-light2: rgb(20, 20, 20);
+    --scrim-background-color: rgba(255, 255, 255, 0.5);
     --secondary-color-light: rgb(30, 30, 30);
     --secondary-color-light2: rgb(20, 20, 20);
     --secondary-color: rgb(90, 90, 90);

@@ -33,9 +33,8 @@
 
   export let navigate: NavigateFn
 
-  const staticUpcomingDates = readable(
-    Array.from(Array(7).keys()).map((i) => dayjs().add(i, 'day')),
-    () => {}
+  const staticUpcomingDates = Array.from(Array(7).keys()).map((i) =>
+    dayjs().add(i, 'day')
   )
 
   let date = dayjs()
@@ -68,8 +67,8 @@
     d.map((dish) => ({ ...dish, date: fromTimestamp(dish.date) }))
   )
 
-  $: upcomingDates = derived([staticUpcomingDates, upcomingDishes], ([u, d]) =>
-    u.map((date) => ({
+  $: upcomingDates = derived([upcomingDishes], ([d]) =>
+    staticUpcomingDates.map((date) => ({
       date,
       dishes: readable(
         d.filter((dish) => dish.date.isSame(date, 'day')),

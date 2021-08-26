@@ -14,8 +14,6 @@
 
   $: recipe = getDoc<Recipe>('recipes', id)
 
-  $: console.log($recipe)
-
   function editRecipe() {
     if ($recipe) {
       navigate(`/recipes/${$recipe.id}/edit`)

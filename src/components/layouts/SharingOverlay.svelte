@@ -83,7 +83,7 @@
   }
 
   .account-sharing-info.open {
-    background: white;
+    background: var(--background-color);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     height: 150px;
     width: 100%;

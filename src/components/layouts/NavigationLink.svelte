@@ -1,18 +1,11 @@
 <script lang="ts">
-  import { Link, useResolve } from 'svelte-navigator'
+  import { Link } from 'svelte-navigator'
 
   export let to: string = ''
-
   export let label: string = ''
 
-  const resolve = useResolve()
-
-  function getProps({ location, href }: any) {
-    const exact = resolve(location.pathname) === href
-
-    const partialMatch = resolve(location.pathname).includes(href)
-
-    const isActive = href === '/meal-planner' ? exact : exact || partialMatch
+  function getProps({ location, href, isPartiallyCurrent, isCurrent }: any) {
+    const isActive = href === '/' ? isCurrent : isPartiallyCurrent || isCurrent
 
     const className = `navigation-link ${isActive ? 'active' : ''}`
 

@@ -74,6 +74,7 @@ export interface ShoppingList {
   uid: string | null
   name: string
   items: Array<ShoppingItem>
+  date: Dayjs | Date
 }
 export interface ShoppingItem extends RecipeItem {
   completed: boolean

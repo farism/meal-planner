@@ -66,7 +66,7 @@
   }
 
   .scrim {
-    background: rgba(0, 0, 0, 0.5);
+    background-color: var(--scrim-background-color);
     height: 100%;
     left: 0;
     opacity: 0;
