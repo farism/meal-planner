@@ -86,6 +86,8 @@
     --primary-color-light: rgb(182, 236, 182);
     --primary-color-light2: rgb(211, 243, 211);
     --primary-color: rgb(76, 214, 76);
+    --signin-background-color: rgb(255, 255, 255);
+    --signin-border-color: transparent;
     --scrim-background-color: rgba(0, 0, 0, 0.5);
     --secondary-color-light: rgb(231, 231, 231);
     --secondary-color-light2: rgb(245, 245, 245);
@@ -107,6 +109,7 @@
     --navigation-background-color: rgb(35, 35, 35);
     --navigation-border-color: rgb(25, 25, 25);
     --primary-color-light2: rgb(20, 20, 20);
+    --signin-border-color: rgb(245, 245, 245);
     --scrim-background-color: rgba(255, 255, 255, 0.5);
     --secondary-color-light: rgb(30, 30, 30);
     --secondary-color-light2: rgb(20, 20, 20);

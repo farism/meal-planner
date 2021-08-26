@@ -13,8 +13,8 @@ export default defineConfig(({ command, mode }) => {
           background_color: '#f5f5f5',
           display: 'standalone',
           scope: '/',
-          name: 'meal planner',
-          short_name: 'meal planner',
+          name: 'My Meal Plan',
+          short_name: 'My Meal Plan',
           description: 'Plan your meals',
           icons: [
             {

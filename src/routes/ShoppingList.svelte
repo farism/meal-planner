@@ -2,7 +2,7 @@
   import { orderBy } from 'lodash-es'
   import Select from '../components/forms/Select.svelte'
   import type { NavigateFn } from 'svelte-navigator'
-  import { derived, get } from 'svelte/store'
+  import { derived, get, writable } from 'svelte/store'
   import Button from '../components/buttons/Button.svelte'
   import FABCreate from '../components/buttons/FABCreate.svelte'
   import FABRemove from '../components/buttons/FABRemove.svelte'
@@ -12,7 +12,7 @@
   import FABPanel from '../components/layouts/FABPanel.svelte'
   import Header from '../components/layouts/Header.svelte'
   import List from '../components/layouts/List.svelte'
-  import { canEdit, getDoc, saveShoppingList } from '../firebase'
+  import { canEdit, getDoc, saveShoppingList, settings } from '../firebase'
   import type { ShoppingItem, ShoppingList } from '../types'
 
   function defaultItem() {
@@ -35,9 +35,7 @@
 
   export let id: string | null = null
 
-  $: list = getDoc<ShoppingList>('shopping_lists', id)
-
-  $: docs = derived(list, (list) => orderBy(list?.items || [], ['item.name']))
+  let hideCompleted = writable(false)
 
   let showBottomSheet = false
 
@@ -48,6 +46,15 @@
   let nameRef: HTMLInputElement
 
   let newItem: ShoppingItem = defaultItem()
+
+  $: list = getDoc<ShoppingList>('shopping_lists', id)
+
+  $: docs = derived([settings, list], ([settings, list]) =>
+    orderBy(list?.items || [], ['item.name']).filter(
+      (item) =>
+        !settings.hideCompleted || (settings.hideCompleted && !item.completed)
+    )
+  )
 
   $: if (!showBottomSheet) {
     resetBottomSheet()
@@ -191,7 +198,13 @@
     transition: 0.2s transform ease-out;
   }
 
+  .item::before,
+  .item::after {
+    content: '\00a0\00a0';
+  }
+
   .item.completed {
+    color: rgb(100, 100, 100);
     text-decoration: line-through;
   }
 

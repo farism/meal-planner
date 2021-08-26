@@ -15,10 +15,11 @@
 <style>
   button {
     align-items: center;
-    background: transparent;
-    border: 0;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    background-color: var(--signin-background-color);
+    border: 1px solid var(--signin-border-color);
     border-radius: 2px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+    color: rgb(70, 70, 70);
     display: flex;
     justify-content: center;
     padding: 12px;
@@ -29,19 +30,13 @@
     background: var(--secondary-color-light);
   }
 
-  :global(body.dark-mode) button {
-    border: 1px solid var(--body-color);
-  }
-
   button :global(svg) {
-    color: var(--body-color);
     height: 32px;
     margin-right: 16px;
     width: 32px;
   }
 
   span {
-    color: var(--body-color);
     font-size: 24px;
   }
 
