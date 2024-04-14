@@ -90,7 +90,11 @@ auth
   })
 
 export function login() {
-  auth.signInWithRedirect(provider)
+  // auth.signInWithRedirect(provider) // does not work on mobile safari
+
+  auth.signInWithPopup(provider).then((u) => {
+    user.set(u.user)
+  })
 }
 
 export function loginAnonymous() {
